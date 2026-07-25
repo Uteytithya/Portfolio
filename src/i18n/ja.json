@@ -1,0 +1,51 @@
+{
+  "siteTitle": "ヌオン・ウテイティチャ — ポートフォリオ",
+  "nav": { "work": "作品", "about": "わたしについて", "contact": "お問い合わせ" },
+  "hero": {
+    "headline": "ヌオン・ウテイティチャ",
+    "subtitle": "バックエンド開発者 — 心を込めて、ひとつひとつ",
+    "cta": "作品を見る ↓",
+    "body": "最良の仕事は、声を張り上げない。ウェブは Laravel と Nuxt、モバイルは Flutter、必要なときには機械学習。考え抜かれた設計と、無駄のないコード。"
+  },
+  "about": {
+    "title": "わたしについて",
+    "body1": "プノンペン出身の開発者、ヌオン・ウテイティチャです。カンボジア・デジタル技術アカデミーでコンピュータサイエンス（ソフトウェア工学専攻）を学びながら、Laravel のバックエンド、Nuxt のフロントエンド、Flutter のアプリ、TensorFlow と scikit-learn による機械学習まで、端から端までつくっています。",
+    "body2": "InternLink での NLP 文書処理から、量子機械学習の研究、Robocon のロボット開発まで。姿勢はいつも同じです。本質だけが残るまで削ぎ落とし、速く、壊れないものにすること。",
+    "quote": "静けさの中に力がある",
+    "quoteTranslation": "静寂は、最大の表現である。"
+  },
+  "work": {
+    "title": "作品集",
+    "viewCaseStudy": "詳細を見る →",
+    "viewOnGitHub": "GitHubで見る →",
+    "visitSite": "サイトを見る →"
+  },
+  "techStack": {
+    "title": "道具と技",
+    "categories": {
+      "languages": "言語",
+      "frameworks": "フレームワーク",
+      "data": "データ＆クラウド",
+      "tools": "ツール"
+    },
+    "items": {
+      "languages": ["PHP", "TypeScript", "Python", "Dart"],
+      "frameworks": ["Laravel", "Nuxt", "Flutter", "Express"],
+      "data": ["PostgreSQL", "MySQL", "Redis", "Firebase"],
+      "tools": ["Git", "Docker", "AWS"]
+    }
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "email": "uteytithya@gmail.com",
+    "github": "GitHub — @Uteytithya",
+    "githubUrl": "https://github.com/Uteytithya",
+    "reachLabel": "連絡先",
+    "elsewhereLabel": "リンク",
+    "locationLabel": "所在地",
+    "location": "カンボジア・プノンペン",
+    "farewell": "また逢う日まで",
+    "colophon": "© 2026 ヌオン・ウテイティチャ · Astroで静かに構築"
+  },
+  "back": "← 戻る"
+}

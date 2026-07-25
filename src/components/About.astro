@@ -1,0 +1,44 @@
+---
+import Divider from './Divider.astro';
+import KanjiGhost from './KanjiGhost.astro';
+
+const { t } = Astro.props;
+---
+
+<section id="about" class="section">
+  <div class="reveal">
+    <h2 class="font-display text-section text-sumi-ink">{t.about.title}</h2>
+    <div class="mt-8">
+      <Divider />
+    </div>
+    <div class="mt-10 max-w-[560px] space-y-6 text-stone">
+      <p>{t.about.body1}</p>
+      <p>{t.about.body2}</p>
+    </div>
+    <figure class="mt-16 max-w-[560px]">
+      <blockquote class="about-quote">{t.about.quote}</blockquote>
+      <figcaption class="about-quote-translation mt-3">
+        {t.about.quoteTranslation}
+      </figcaption>
+    </figure>
+  </div>
+  <KanjiGhost kanji="間" />
+</section>
+
+<style>
+  .about-quote {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500;
+    font-size: 25px;
+    color: var(--stone);
+    letter-spacing: 0.12em;
+  }
+
+  .about-quote-translation {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--stone);
+    opacity: 0.85;
+  }
+</style>

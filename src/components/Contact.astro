@@ -1,0 +1,155 @@
+---
+import Divider from './Divider.astro';
+import KanjiGhost from './KanjiGhost.astro';
+
+const { locale, t } = Astro.props;
+const base = `/${locale}`;
+
+const navLinks = [
+  { href: `${base}/#work`, label: t.nav.work },
+  { href: `${base}/#about`, label: t.nav.about },
+  { href: `${base}/#tech`, label: t.techStack.title }
+];
+---
+
+<footer id="contact" class="site-footer">
+  <div class="relative mx-auto w-full max-w-site px-6 py-20 md:px-16 md:py-28">
+    <h2 class="footer-title font-display text-section">{t.contact.title}</h2>
+    <div class="mt-8">
+      <Divider />
+    </div>
+
+    <p class="mt-12">
+      <a class="footer-email" href={`mailto:${t.contact.email}`}>
+        {t.contact.email}
+      </a>
+    </p>
+
+    <div class="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-3">
+      <div>
+        <h3 class="footer-label">{t.contact.reachLabel}</h3>
+        <ul class="mt-5 flex flex-col gap-3">
+          <li>
+            <a class="footer-link" href={`mailto:${t.contact.email}`}>
+              {t.contact.email}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-label">{t.contact.elsewhereLabel}</h3>
+        <ul class="mt-5 flex flex-col gap-3">
+          <li>
+            <a
+              class="footer-link"
+              href={t.contact.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.contact.github}
+            </a>
+          </li>
+          {
+            navLinks.map((link) => (
+              <li>
+                <a class="footer-link" href={link.href}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-label">{t.contact.locationLabel}</h3>
+        <p class="footer-link mt-5" style="border: none; cursor: default;">
+          {t.contact.location}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="footer-bottom mt-20 flex flex-col gap-3 border-t pt-8 md:flex-row md:items-center md:justify-between"
+    >
+      <p class="footer-farewell">{t.contact.farewell}</p>
+      <p class="footer-colophon">{t.contact.colophon}</p>
+    </div>
+
+    <KanjiGhost kanji="縁" tone="light" />
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--sumi-charcoal);
+    margin-top: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      margin-top: 64px;
+    }
+  }
+
+  .footer-title {
+    color: var(--washi);
+  }
+
+  .footer-email {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--washi);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 169, 110, 0.5);
+    padding-bottom: 2px;
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+
+  html[lang='ja'] .footer-email {
+    font-size: 19px;
+  }
+
+  .footer-email:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .footer-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .footer-link {
+    font-size: 15px;
+    color: rgba(247, 243, 235, 0.72);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+
+  a.footer-link:hover {
+    color: var(--washi);
+    border-bottom-color: rgba(247, 243, 235, 0.4);
+  }
+
+  .footer-bottom {
+    border-color: rgba(247, 243, 235, 0.12);
+  }
+
+  .footer-farewell {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: rgba(247, 243, 235, 0.55);
+  }
+
+  .footer-colophon {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: rgba(247, 243, 235, 0.4);
+  }
+</style>

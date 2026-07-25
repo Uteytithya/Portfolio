@@ -1,0 +1,95 @@
+---
+import Divider from './Divider.astro';
+import KanjiGhost from './KanjiGhost.astro';
+
+const { locale, t } = Astro.props;
+---
+
+<section class="relative flex min-h-[78vh] items-center">
+  <div class="reveal w-full py-16 md:w-2/5 md:py-24">
+    <h1 class="font-display text-hero text-sumi-ink">{t.hero.headline}</h1>
+    <p class="hero-subtitle mt-6">{t.hero.subtitle}</p>
+    <div class="mt-10">
+      <Divider />
+    </div>
+    <p class="mt-10 max-w-md text-stone">{t.hero.body}</p>
+    <a href={`/${locale}/#work`} class="hero-cta mt-12 inline-block">{t.hero.cta}</a>
+  </div>
+
+  <!-- The right 60%: a portrait resting in the ma, slightly imperfectly hung. -->
+  <div class="relative hidden items-center justify-center self-stretch md:flex md:w-3/5">
+    <figure class="hero-portrait reveal">
+      <img
+        src="/profile.jpg"
+        alt="Nuon Uteytithya"
+        width="1154"
+        height="1280"
+        loading="eager"
+      />
+    </figure>
+  </div>
+
+  <KanjiGhost kanji="創" />
+</section>
+
+<style>
+  .hero-subtitle {
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--stone);
+  }
+
+  html[lang='ja'] .hero-subtitle {
+    font-size: 18px;
+  }
+
+  .hero-cta {
+    background-color: var(--indigo);
+    color: var(--washi);
+    padding: 14px 36px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: background-color 400ms ease;
+  }
+
+  .hero-cta:hover {
+    background-color: var(--vermilion);
+  }
+
+  .hero-portrait {
+    position: relative;
+    transform: rotate(-1.2deg);
+  }
+
+  /* An offset gold hairline frame behind the print */
+  .hero-portrait::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(16px, 16px);
+    border: 0.5px solid var(--gold);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .hero-portrait img {
+    position: relative;
+    display: block;
+    width: clamp(260px, 28vw, 360px);
+    height: auto;
+    background-color: #fbf8f1;
+    padding: 10px;
+    border-radius: 2px;
+    border: 1px solid var(--paper-edge);
+    box-shadow: 0 12px 32px var(--ink-wash);
+    filter: grayscale(35%) sepia(8%);
+    transition: filter 600ms ease;
+  }
+
+  .hero-portrait:hover img {
+    filter: none;
+  }
+</style>

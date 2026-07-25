@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import Divider from './Divider.astro';
+import KanjiGhost from './KanjiGhost.astro';
+import ProjectCard from './ProjectCard.astro';
+
+const { locale, t } = Astro.props;
+
+const entries = (
+  await getCollection('projects', ({ id }) => id.startsWith(`${locale}/`))
+).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// First paragraph of the markdown body serves as the card description.
+const excerpt = (body) =>
+  (body ?? '').trim().split(/\r?\n\s*\r?\n/)[0]?.replace(/\r?\n/g, ' ') ?? '';
+---
+
+<section id="work" class="section">
+  <div class="reveal">
+    <h2 class="font-display text-section text-sumi-ink">{t.work.title}</h2>
+    <div class="mt-8">
+      <Divider />
+    </div>
+  </div>
+  <div class="mt-16 flex flex-col gap-24">
+    {
+      entries.map((entry, i) => (
+        <ProjectCard
+          title={entry.data.title}
+          category={entry.data.category}
+          year={entry.data.year}
+          description={excerpt(entry.body)}
+          image={entry.data.image}
+          slug={entry.id.split('/')[1]}
+          locale={locale}
+          viewLabel={t.work.viewCaseStudy}
+          external={entry.data.repo ?? entry.data.link}
+          flipped={i % 2 === 1}
+        />
+      ))
+    }
+  </div>
+  <KanjiGhost kanji="作" />
+</section>

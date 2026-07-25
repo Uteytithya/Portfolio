@@ -1,0 +1,51 @@
+{
+  "siteTitle": "Uteytithya Nuon — Portfolio",
+  "nav": { "work": "Work", "about": "About", "contact": "Contact" },
+  "hero": {
+    "headline": "Uteytithya Nuon",
+    "subtitle": "Backend Developer — quiet craft, made with intention",
+    "cta": "View Work ↓",
+    "body": "A backend developer who believes the best work doesn't need to shout. Laravel and Nuxt on the web, Flutter on mobile, machine learning when the problem asks for it. Thoughtful. Deliberate. Quiet."
+  },
+  "about": {
+    "title": "About",
+    "body1": "I'm Uteytithya Nuon, a developer from Phnom Penh — studying Computer Science with a focus on Software Engineering at the Cambodia Academy of Digital Technology, and building things end to end: secure Laravel backends, Nuxt frontends, Flutter apps, and ML pipelines with TensorFlow and scikit-learn.",
+    "body2": "From NLP document processing at InternLink to quantum ML research and Robocon robotics, my approach stays the same: remove until nothing remains but what is essential — then make it fast, and make it hold.",
+    "quote": "静けさの中に力がある",
+    "quoteTranslation": "Strength resides in stillness."
+  },
+  "work": {
+    "title": "Selected Work",
+    "viewCaseStudy": "View Case Study →",
+    "viewOnGitHub": "View on GitHub →",
+    "visitSite": "Visit Site →"
+  },
+  "techStack": {
+    "title": "Tools & Craft",
+    "categories": {
+      "languages": "Languages",
+      "frameworks": "Frameworks",
+      "data": "Data & Cloud",
+      "tools": "Tools"
+    },
+    "items": {
+      "languages": ["PHP", "TypeScript", "Python", "Dart"],
+      "frameworks": ["Laravel", "Nuxt", "Flutter", "Express"],
+      "data": ["PostgreSQL", "MySQL", "Redis", "Firebase"],
+      "tools": ["Git", "Docker", "AWS"]
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "email": "uteytithya@gmail.com",
+    "github": "GitHub — @Uteytithya",
+    "githubUrl": "https://github.com/Uteytithya",
+    "reachLabel": "Reach me",
+    "elsewhereLabel": "Elsewhere",
+    "locationLabel": "Location",
+    "location": "Phnom Penh, Cambodia",
+    "farewell": "Until we meet again — また逢う日まで",
+    "colophon": "© 2026 Nuon Uteytithya · Built quietly with Astro"
+  },
+  "back": "← Back"
+}

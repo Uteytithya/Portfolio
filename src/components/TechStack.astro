@@ -1,0 +1,181 @@
+---
+import Divider from './Divider.astro';
+import KanjiGhost from './KanjiGhost.astro';
+
+const { t } = Astro.props;
+
+const categoryOrder = ['languages', 'frameworks', 'data', 'tools'];
+
+const iconSlug = {
+  PHP: 'php',
+  TypeScript: 'typescript',
+  Python: 'python',
+  Dart: 'dart',
+  Laravel: 'laravel',
+  Nuxt: 'nuxt',
+  Flutter: 'flutter',
+  Express: 'express',
+  PostgreSQL: 'postgresql',
+  MySQL: 'mysql',
+  Redis: 'redis',
+  Firebase: 'firebase',
+  Git: 'git',
+  Docker: 'docker',
+  AWS: 'aws'
+};
+
+// Inline the SVGs so they inherit currentColor.
+const icons = import.meta.glob('../../public/icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+});
+
+const iconMarkup = (name) =>
+  icons[`../../public/icons/${iconSlug[name]}.svg`] ?? '';
+---
+
+<section id="tech" class="section">
+  <div class="reveal">
+    <h2 class="font-display text-section text-sumi-ink">{t.techStack.title}</h2>
+    <div class="mt-8">
+      <Divider />
+    </div>
+  </div>
+
+  <!-- An ink slab: dark industrial plate, Endfield-inspired -->
+  <div class="tech-plate reveal mt-16">
+    <span class="plate-corner plate-corner--tl" aria-hidden="true"></span>
+    <span class="plate-corner plate-corner--tr" aria-hidden="true"></span>
+    <span class="plate-corner plate-corner--bl" aria-hidden="true"></span>
+    <span class="plate-corner plate-corner--br" aria-hidden="true"></span>
+
+    <div class="relative z-10 grid grid-cols-1 gap-x-16 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        categoryOrder.map((key) => (
+          <div>
+            <h3 class="plate-label">{t.techStack.categories[key]}</h3>
+            <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-8">
+              {t.techStack.items[key].map((item) => (
+                <li class="tech-item" title={item}>
+                  <span
+                    class="tech-icon"
+                    role="img"
+                    aria-label={item}
+                    set:html={iconMarkup(item)}
+                  />
+                  <span class="tech-name" aria-hidden="true">
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <KanjiGhost kanji="技" tone="light" />
+  </div>
+</section>
+
+<style>
+  .tech-plate {
+    position: relative;
+    background-color: var(--sumi-charcoal);
+    border-radius: 2px;
+    padding: 48px 32px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .tech-plate {
+      padding: 72px 64px;
+    }
+  }
+
+  /* Volt corner brackets — the HUD whisper */
+  .plate-corner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 0 solid var(--volt);
+    opacity: 0.85;
+    z-index: 10;
+  }
+
+  .plate-corner--tl { top: 14px; left: 14px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .plate-corner--tr { top: 14px; right: 14px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .plate-corner--bl { bottom: 14px; left: 14px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .plate-corner--br { bottom: 14px; right: 14px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  .plate-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--volt);
+  }
+
+  .plate-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background-color: var(--volt);
+    flex-shrink: 0;
+  }
+
+  .tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: default;
+  }
+
+  .tech-icon {
+    display: inline-flex;
+    color: rgba(247, 243, 235, 0.62);
+    transition: color 300ms ease, transform 300ms ease;
+  }
+
+  .tech-icon :global(svg) {
+    width: 52px;
+    height: 52px;
+  }
+
+  @media (min-width: 768px) {
+    .tech-icon :global(svg) {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .tech-item:hover .tech-icon {
+    color: var(--volt);
+    transform: translateY(-3px);
+  }
+
+  /* Names stay silent until asked */
+  .tech-name {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(247, 243, 235, 0.55);
+    opacity: 0;
+    transition: opacity 300ms ease;
+    white-space: nowrap;
+  }
+
+  html[lang='ja'] .tech-name {
+    letter-spacing: 0.08em;
+  }
+
+  .tech-item:hover .tech-name {
+    opacity: 1;
+  }
+</style>

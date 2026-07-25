@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../../components/BaseLayout.astro';
+import Navigation from '../../../components/Navigation.astro';
+import WorkSection from '../../../components/WorkSection.astro';
+import Contact from '../../../components/Contact.astro';
+import t from '../../../i18n/en.json';
+
+const locale = 'en';
+---
+
+<BaseLayout locale={locale} title={`${t.work.title} — ${t.siteTitle}`}>
+  <Navigation slot="nav" locale={locale} t={t} />
+  <div class="pt-8">
+    <a href={`/${locale}/`} class="label text-stone hover:text-indigo">{t.back}</a>
+  </div>
+  <WorkSection locale={locale} t={t} />
+  <Contact slot="footer" locale={locale} t={t} />
+</BaseLayout>

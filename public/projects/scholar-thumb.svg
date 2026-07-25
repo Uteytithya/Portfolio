@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <rect width="1200" height="900" fill="#2B2928"/>
+  <!-- the open book -->
+  <path d="M340 560 C 430 520, 520 520, 600 555 C 680 520, 770 520, 860 560 L 860 330 C 770 290, 680 290, 600 325 C 520 290, 430 290, 340 330 Z" fill="none" stroke="#F7F3EB" stroke-width="10" stroke-linejoin="round" opacity="0.65"/>
+  <path d="M600 325 V 555" stroke="#F7F3EB" stroke-width="8" opacity="0.4"/>
+  <!-- thought, leaving the page -->
+  <circle cx="885" cy="255" r="12" fill="#C9A96E"/>
+  <circle cx="960" cy="185" r="9" fill="#C9A96E" opacity="0.7"/>
+  <circle cx="1015" cy="255" r="7" fill="#C9A96E" opacity="0.45"/>
+  <path d="M785 330 L 885 255 L 960 185 M 885 255 L 1015 255" stroke="#C9A96E" stroke-width="4" opacity="0.4"/>
+  <text x="130" y="800" font-family="serif" font-size="120" fill="rgba(247,243,235,0.10)">学</text>
+</svg>

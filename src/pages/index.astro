@@ -1,0 +1,44 @@
+---
+// Static build: there is no request to read Accept-Language from at runtime,
+// so language detection happens client-side. A remembered choice
+// (localStorage, set by the LanguageSwitcher) wins over navigator.language.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Uteytithya Nuon — Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex" />
+    <link rel="alternate" hreflang="en" href="/en/" />
+    <link rel="alternate" hreflang="ja" href="/ja/" />
+    <script is:inline>
+      (function () {
+        var lang = 'en';
+        try {
+          lang =
+            localStorage.getItem('lang') ||
+            ((navigator.language || '').toLowerCase().indexOf('ja') === 0
+              ? 'ja'
+              : 'en');
+        } catch (e) {
+          /* fall through to en */
+        }
+        if (lang !== 'en' && lang !== 'ja') lang = 'en';
+        location.replace('/' + lang + '/');
+      })();
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/en/" />
+    </noscript>
+  </head>
+  <body style="background-color: #F7F3EB;">
+    <noscript>
+      <p style="font-family: serif; padding: 2rem;">
+        <a href="/en/">English</a> · <a href="/ja/">日本語</a>
+      </p>
+    </noscript>
+  </body>
+</html>

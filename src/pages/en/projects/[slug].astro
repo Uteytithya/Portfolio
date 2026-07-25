@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../components/BaseLayout.astro';
+import Navigation from '../../../components/Navigation.astro';
+import Divider from '../../../components/Divider.astro';
+import Contact from '../../../components/Contact.astro';
+import t from '../../../i18n/en.json';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ id }) =>
+    id.startsWith('en/')
+  );
+  return entries.map((entry) => ({
+    params: { slug: entry.id.split('/')[1] },
+    props: { entry }
+  }));
+}
+
+const locale = 'en';
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout locale={locale} title={`${entry.data.title} — ${t.siteTitle}`}>
+  <Navigation slot="nav" locale={locale} t={t} />
+  <article class="section">
+    <a href={`/${locale}/`} class="label text-stone hover:text-indigo">{t.back}</a>
+    <p class="tag mt-12">{entry.data.category} · {entry.data.year}</p>
+    <h1 class="font-display text-section mt-4 text-sumi-ink">
+      {entry.data.title}
+    </h1>
+    <div class="mt-8">
+      <Divider />
+    </div>
+    <img
+      class="mt-12 w-full rounded-[2px] border border-black/[0.06]"
+      src={entry.data.image}
+      alt={entry.data.title}
+    />
+    <div class="prose-quiet mt-12 max-w-[640px]">
+      <Content />
+    </div>
+    {
+      (entry.data.repo || entry.data.link) && (
+        <a
+          class="label mt-4 inline-block text-indigo hover:underline"
+          href={entry.data.repo ?? entry.data.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {entry.data.repo ? t.work.viewOnGitHub : t.work.visitSite}
+        </a>
+      )
+    }
+  </article>
+  <Contact slot="footer" locale={locale} t={t} />
+</BaseLayout>

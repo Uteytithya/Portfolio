@@ -1,0 +1,38 @@
+---
+const { kanji, tone = 'dark' } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  class:list={['kanji-ghost', { 'kanji-ghost--light': tone === 'light' }]}
+>
+  {kanji}
+</span>
+
+<style>
+  .kanji-ghost {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 400;
+    font-size: 200px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.03);
+    writing-mode: vertical-rl;
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .kanji-ghost--light {
+    color: rgba(247, 243, 235, 0.05);
+  }
+
+  @media (max-width: 767px) {
+    .kanji-ghost {
+      opacity: 0;
+    }
+  }
+</style>

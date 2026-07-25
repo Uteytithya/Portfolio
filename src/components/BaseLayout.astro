@@ -1,0 +1,54 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import PaperGrain from './PaperGrain.astro';
+import '../styles/global.css';
+
+const { locale = 'en', title, description = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <PaperGrain />
+    <slot name="nav" />
+    <main class="mx-auto w-full max-w-site px-6 md:px-16">
+      <slot />
+    </main>
+    <slot name="footer" />
+    <script>
+      // Scroll reveal — sections drift in once, then rest.
+      function observeReveals() {
+        const els = document.querySelectorAll('.reveal:not(.revealed)');
+        if (!els.length) return;
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+      observeReveals();
+      document.addEventListener('astro:page-load', observeReveals);
+    </script>
+  </body>
+</html>

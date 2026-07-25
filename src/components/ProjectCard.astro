@@ -1,0 +1,127 @@
+---
+const {
+  title,
+  category,
+  year,
+  description,
+  image,
+  slug,
+  locale,
+  viewLabel,
+  external,
+  flipped = false
+} = Astro.props;
+---
+
+<article
+  class:list={[
+    'project-card reveal flex flex-col md:flex-row',
+    { 'md:flex-row-reverse': flipped }
+  ]}
+>
+  {
+    external && (
+      <a
+        class="card-cover"
+        href={external}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={title}
+      />
+    )
+  }
+  <div class="overflow-hidden md:w-3/5">
+    <img
+      class="card-img h-64 w-full object-cover md:h-full"
+      src={image}
+      alt={title}
+      loading="lazy"
+    />
+  </div>
+  <div class="flex flex-col justify-center gap-3 p-8 md:w-2/5 md:p-12">
+    <p class="tag">{category}</p>
+    <h3 class="card-title font-display text-sumi-ink">{title}</h3>
+    <p class="text-[14px] text-stone">{year}</p>
+    {description && <p class="mt-2 text-stone">{description}</p>}
+    <a class="card-link mt-4" href={`/${locale}/projects/${slug}/`}>{viewLabel}</a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    background-color: #fbf8f1;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(34, 58, 94, 0.03),
+      0 2px 8px var(--ink-wash);
+    transition: transform 400ms ease, box-shadow 400ms ease;
+  }
+
+  /* Vermilion thread along the left edge, revealed on hover. */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--vermilion);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 400ms ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 0 1px rgba(34, 58, 94, 0.03),
+      0 8px 24px rgba(43, 41, 40, 0.08);
+  }
+
+  .project-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .card-img {
+    filter: grayscale(100%);
+    transition: filter 600ms ease;
+  }
+
+  .project-card:hover .card-img {
+    filter: grayscale(0%);
+  }
+
+  /* Whole card opens the repo (or live site); sits under the case-study link */
+  .card-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .card-title {
+    font-size: 31px;
+    line-height: 1.2;
+  }
+
+  html[lang='ja'] .card-title {
+    font-size: 27px;
+    line-height: 1.4;
+  }
+
+  .card-link {
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--indigo);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    align-self: flex-start;
+    transition: border-color 300ms ease;
+  }
+
+  .card-link:hover {
+    border-bottom-color: var(--indigo);
+  }
+</style>
