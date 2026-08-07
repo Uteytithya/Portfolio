@@ -1,0 +1,65 @@
+---
+// Editorial section masthead: rule, index numerals, title, counter-language subtitle.
+// On the single-page views this is one section among several, so it renders an
+// <h2>. On a standalone page (work index, colophon) the same masthead *is* the
+// page's heading — `as="h1"` lets those pages say so without restyling it.
+const { num, kanji, title, sub, as: Heading = 'h2' } = Astro.props;
+---
+
+<header class="section-header reveal">
+  <div class="header-rule">
+    <span class="header-kanji">{kanji}</span>
+    <span class="header-line"></span>
+    <span class="header-num">{num}</span>
+  </div>
+  <Heading class="font-display text-section mt-6 text-sumi-ink">{title}</Heading>
+  <p class="header-sub mt-3">{sub}</p>
+</header>
+
+<style>
+  .header-rule {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-kanji {
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 15px;
+    color: var(--vermilion);
+    flex-shrink: 0;
+  }
+
+  .header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.14),
+      rgba(0, 0, 0, 0.03)
+    );
+  }
+
+  .header-num {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--stone);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  html[lang='ja'] .header-sub {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    letter-spacing: 0.2em;
+  }
+</style>

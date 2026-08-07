@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Divider from '../components/Divider.astro';
+import Seal from '../components/Seal.astro';
+import KanjiGhost from '../components/KanjiGhost.astro';
+
+// This page sits outside the /en /ja tree, so it speaks both languages at once
+// rather than guessing. No `.reveal` here — an error page should never depend
+// on JavaScript to become visible.
+---
+
+<BaseLayout
+  locale="en"
+  title="404 — Uteytithya Nuon"
+  description="This page could not be found."
+  noindex
+>
+  <section class="notfound">
+    <div class="notfound-inner">
+      <p class="notfound-code font-display">404</p>
+
+      <div class="notfound-seal">
+        <Seal kanji="迷" size={62} />
+      </div>
+
+      <h1 class="notfound-title font-display mt-8">This page has wandered off.</h1>
+      <p class="notfound-title-ja mt-3" lang="ja">このページは道に迷いました。</p>
+
+      <div class="mt-8 flex justify-center">
+        <Divider />
+      </div>
+
+      <p class="notfound-body mt-8">Nothing here — or nothing any more.</p>
+      <p class="notfound-body-ja mt-2" lang="ja">
+        ここには何もありません。戻り道は、こちらに。
+      </p>
+
+      <nav class="notfound-links mt-12" aria-label="Return home">
+        <a class="notfound-link" href="/en/">English</a>
+        <a class="notfound-link" href="/ja/" lang="ja">日本語</a>
+      </nav>
+    </div>
+
+    <KanjiGhost kanji="迷" />
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 82vh;
+    padding: 64px 0;
+    text-align: center;
+  }
+
+  .notfound-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+  }
+
+  .notfound-code {
+    font-size: clamp(64px, 14vw, 108px);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--sumi-ink);
+    opacity: 0.14;
+    letter-spacing: 0.04em;
+  }
+
+  /* The seal presses over the numerals, as on a returned letter. */
+  .notfound-seal {
+    display: flex;
+    justify-content: center;
+    margin-top: -34px;
+  }
+
+  .notfound-title {
+    font-size: clamp(27px, 4.5vw, 36px);
+    line-height: 1.25;
+    color: var(--sumi-ink);
+  }
+
+  /* lang="ja" on an element does not trigger the html[lang='ja'] font rules,
+     so the Japanese faces are named directly here. */
+  .notfound-title-ja {
+    font-family: 'Zen Old Mincho', serif;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+  }
+
+  .notfound-body {
+    font-size: 16px;
+    color: var(--stone);
+  }
+
+  .notfound-body-ja {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--stone);
+    opacity: 0.8;
+  }
+
+  .notfound-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .notfound-link {
+    min-width: 132px;
+    padding: 12px 26px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sumi-ink);
+    text-decoration: none;
+    border: 1px solid var(--paper-edge);
+    border-radius: 2px;
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+
+  .notfound-link:hover {
+    color: var(--indigo);
+    border-color: var(--indigo);
+  }
+</style>
