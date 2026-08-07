@@ -14,8 +14,10 @@ export default function LanguageSwitcher({ locale, path }) {
     }
   };
 
-  const linkStyle = (active, ja) => ({
-    fontFamily: ja ? "'Zen Kaku Gothic New', sans-serif" : "'Inter', sans-serif",
+  // Both labels now share one family — Zen Kaku Gothic New carries the Latin
+  // and the kana — so this no longer branches on language.
+  const linkStyle = (active) => ({
+    fontFamily: "'Zen Kaku Gothic New', sans-serif",
     fontSize: '13px',
     fontWeight: 500,
     letterSpacing: '0.04em',
@@ -34,8 +36,10 @@ export default function LanguageSwitcher({ locale, path }) {
       <a
         href={swap('en')}
         onClick={() => remember('en')}
-        aria-current={locale === 'en' ? 'true' : undefined}
-        style={linkStyle(locale === 'en', false)}
+        aria-current={locale === 'en' ? 'page' : undefined}
+        lang="en"
+        hrefLang="en"
+        style={linkStyle(locale === 'en')}
       >
         EN
       </a>
@@ -46,8 +50,12 @@ export default function LanguageSwitcher({ locale, path }) {
       <a
         href={swap('ja')}
         onClick={() => remember('ja')}
-        aria-current={locale === 'ja' ? 'true' : undefined}
-        style={linkStyle(locale === 'ja', true)}
+        aria-current={locale === 'ja' ? 'page' : undefined}
+        // Without lang/hreflang a screen reader reads 日本語 in the English
+        // voice, which is unintelligible.
+        lang="ja"
+        hrefLang="ja"
+        style={linkStyle(locale === 'ja')}
       >
         日本語
       </a>
