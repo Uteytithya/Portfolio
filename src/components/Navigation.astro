@@ -5,10 +5,17 @@ const { locale, t } = Astro.props;
 const base = `/${locale}`;
 const path = Astro.url.pathname;
 
+// `section` ties a link to the id the scrollspy watches on the home page;
+// `match` marks it active on a sub-route, where there is nothing to spy on.
 const links = [
-  { href: `${base}/#work`, label: t.nav.work, match: '/projects' },
-  { href: `${base}/#about`, label: t.nav.about, match: null },
-  { href: `${base}/#contact`, label: t.nav.contact, match: null }
+  { href: `${base}/#work`, label: t.nav.work, section: 'work', match: '/projects' },
+  { href: `${base}/#about`, label: t.nav.about, section: 'about', match: null },
+  {
+    href: `${base}/#contact`,
+    label: t.nav.contact,
+    section: 'contact',
+    match: null
+  }
 ];
 
 const isActive = (link) => link.match !== null && path.includes(link.match);
@@ -23,6 +30,7 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
         links.map((link) => (
           <a
             href={link.href}
+            data-section={link.section}
             class:list={['nav-link label', { 'nav-link--active': isActive(link) }]}
           >
             {link.label}
@@ -39,6 +47,7 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
       data-menu-toggle
       aria-label="Menu"
       aria-controls="mobile-menu"
+      aria-expanded="false"
     >
       三
     </button>
@@ -48,7 +57,7 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
     <div class="flex flex-col gap-5 px-6 pb-8 pt-4">
       {
         links.map((link) => (
-          <a href={link.href} class="nav-link label">
+          <a href={link.href} data-section={link.section} class="nav-link label">
             {link.label}
           </a>
         ))
@@ -59,8 +68,29 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
 
 <style>
   .site-nav {
-    /* Transparent over washi — only a breath of a border below. */
+    /* Transparent over washi at rest — only a breath of a border below. */
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: transparent;
+    transition: background-color 400ms ease, border-color 400ms ease,
+      box-shadow 400ms ease;
+  }
+
+  /* Once the page has moved, the bar earns a surface — otherwise project images
+     and the dark tech plate slide underneath the links and swallow them. */
+  .site-nav--scrolled {
+    background-color: rgba(247, 243, 235, 0.82);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 12px rgba(43, 41, 40, 0.04);
+  }
+
+  /* Without backdrop-filter the translucency would let text collide with what
+     is behind it, so those browsers get an opaque bar instead. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-nav--scrolled {
+      background-color: var(--washi);
+    }
   }
 
   #mobile-menu {
@@ -84,12 +114,25 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
     border-bottom-color: var(--vermilion);
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .site-nav {
+      transition: none;
+    }
+  }
+
   .nav-hamburger {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Zen Old Mincho', serif;
     font-size: 18px;
     line-height: 1;
     color: var(--sumi-ink);
-    padding: 8px;
+    /* The glyph stays small; the tap area does not. 44px is the floor for a
+       comfortable touch target. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-right: -10px;
   }
 </style>
 
@@ -99,10 +142,83 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
     const target = e.target as Element;
     const menu = document.getElementById('mobile-menu');
     if (!menu) return;
+
+    const setOpen = (open: boolean) => {
+      menu.classList.toggle('hidden', !open);
+      document
+        .querySelector('[data-menu-toggle]')
+        ?.setAttribute('aria-expanded', String(open));
+    };
+
     if (target.closest('[data-menu-toggle]')) {
-      menu.classList.toggle('hidden');
+      setOpen(menu.classList.contains('hidden'));
     } else if (target.closest('#mobile-menu a')) {
-      menu.classList.add('hidden');
+      setOpen(false);
     }
   });
+
+  // Escape closes the menu — a trap with no way out is worse than no menu.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const menu = document.getElementById('mobile-menu');
+    if (!menu || menu.classList.contains('hidden')) return;
+    menu.classList.add('hidden');
+    const toggle = document.querySelector<HTMLElement>('[data-menu-toggle]');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.focus();
+  });
+
+  function initNav() {
+    const nav = document.querySelector<HTMLElement>('.site-nav');
+    if (!nav) return;
+
+    // ── the bar's surface ──────────────────────────────
+    const sentinel = () => nav.classList.toggle('site-nav--scrolled', window.scrollY > 8);
+    sentinel();
+    window.addEventListener('scroll', sentinel, { passive: true });
+
+    // ── scrollspy ──────────────────────────────────────
+    // Only meaningful on the single-page views, where the sections exist.
+    const linksBySection = new Map<string, HTMLElement[]>();
+    document.querySelectorAll<HTMLElement>('[data-section]').forEach((el) => {
+      const key = el.dataset.section!;
+      linksBySection.set(key, [...(linksBySection.get(key) ?? []), el]);
+    });
+
+    const sections = [...linksBySection.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (!sections.length) return;
+
+    // Anything already marked active by the server (a sub-route) stays put.
+    if (document.querySelector('.nav-link--active')) return;
+
+    const mark = (id: string | null) => {
+      linksBySection.forEach((els, key) =>
+        els.forEach((el) => el.classList.toggle('nav-link--active', key === id))
+      );
+    };
+
+    const visible = new Set<string>();
+    const spy = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        // With several sections in view, the topmost one in document order wins.
+        const current = sections.find((s) => visible.has(s.id));
+        mark(current?.id ?? null);
+      },
+      // The band sits below the sticky bar and stops short of the fold, so a
+      // section counts as "current" only once it genuinely occupies the screen.
+      { rootMargin: '-88px 0px -55% 0px' }
+    );
+
+    sections.forEach((s) => spy.observe(s));
+  }
+
+  initNav();
+  document.addEventListener('astro:page-load', initNav);
 </script>

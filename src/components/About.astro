@@ -1,44 +1,111 @@
 ---
-import Divider from './Divider.astro';
+import SectionHeader from './SectionHeader.astro';
 import KanjiGhost from './KanjiGhost.astro';
 
 const { t } = Astro.props;
 ---
 
 <section id="about" class="section">
-  <div class="reveal">
-    <h2 class="font-display text-section text-sumi-ink">{t.about.title}</h2>
-    <div class="mt-8">
-      <Divider />
+  <SectionHeader
+    num={t.about.num}
+    kanji={t.about.kanji}
+    title={t.about.title}
+    sub={t.about.sub}
+  />
+
+  <div class="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)]">
+    <div class="reveal">
+      <div class="space-y-6 text-stone">
+        <p class="about-lead">{t.about.body1}</p>
+        <p>{t.about.body2}</p>
+      </div>
+
+      <figure class="mt-14">
+        <blockquote class="about-quote">{t.about.quote}</blockquote>
+        <figcaption class="about-quote-translation mt-3">
+          {t.about.quoteTranslation}
+        </figcaption>
+      </figure>
     </div>
-    <div class="mt-10 max-w-[560px] space-y-6 text-stone">
-      <p>{t.about.body1}</p>
-      <p>{t.about.body2}</p>
-    </div>
-    <figure class="mt-16 max-w-[560px]">
-      <blockquote class="about-quote">{t.about.quote}</blockquote>
-      <figcaption class="about-quote-translation mt-3">
-        {t.about.quoteTranslation}
-      </figcaption>
-    </figure>
+
+    <!-- ledger of plain facts, right column -->
+    <dl class="about-facts reveal">
+      {
+        t.about.facts.map((fact) => (
+          <div class="fact-row">
+            <dt class="fact-label">{fact.label}</dt>
+            <dd class="fact-value">{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
   </div>
+
   <KanjiGhost kanji="間" />
 </section>
 
 <style>
+  .about-lead {
+    font-size: 20px;
+    line-height: 1.75;
+    color: var(--sumi-ink);
+  }
+
+  html[lang='ja'] .about-lead {
+    font-size: 17px;
+  }
+
   .about-quote {
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Zen Old Mincho', serif;
     font-weight: 500;
     font-size: 25px;
     color: var(--stone);
     letter-spacing: 0.12em;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
   }
 
   .about-quote-translation {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 400;
     font-size: 15px;
     color: var(--stone);
     opacity: 0.85;
+    padding-left: 22px;
+  }
+
+  .about-facts {
+    align-self: start;
+  }
+
+  .fact-row {
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+
+  .fact-row:first-child {
+    border-top: 1px solid var(--paper-edge);
+  }
+
+  .fact-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+    opacity: 0.65;
+    padding-top: 3px;
+  }
+
+  html[lang='ja'] .fact-label {
+    letter-spacing: 0.1em;
+  }
+
+  .fact-value {
+    font-size: 16px;
+    color: var(--sumi-ink);
   }
 </style>

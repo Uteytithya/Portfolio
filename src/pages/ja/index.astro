@@ -4,8 +4,10 @@ import Navigation from '../../components/Navigation.astro';
 import Hero from '../../components/Hero.astro';
 import About from '../../components/About.astro';
 import WorkSection from '../../components/WorkSection.astro';
+import Experience from '../../components/Experience.astro';
 import TechStack from '../../components/TechStack.astro';
 import Contact from '../../components/Contact.astro';
+import Marquee from '../../components/Marquee.astro';
 import t from '../../i18n/ja.json';
 
 const locale = 'ja';
@@ -14,8 +16,10 @@ const locale = 'ja';
 <BaseLayout locale={locale} title={t.siteTitle} description={t.hero.subtitle}>
   <Navigation slot="nav" locale={locale} t={t} />
   <Hero locale={locale} t={t} />
+  <Marquee items={t.marquee} />
   <About locale={locale} t={t} />
   <WorkSection locale={locale} t={t} />
+  <Experience locale={locale} t={t} />
   <TechStack locale={locale} t={t} />
   <Contact slot="footer" locale={locale} t={t} />
 </BaseLayout>

@@ -1,15 +1,18 @@
 ---
 const {
+  index,
   title,
   category,
   year,
   description,
   image,
-  slug,
-  locale,
-  viewLabel,
+  stack = [],
   external,
-  flipped = false
+  externalLabel,
+  flipped = false,
+  // Sits one level below whatever masthead the section rendered, so the
+  // document outline never skips a level.
+  titleAs: Title = 'h3'
 } = Astro.props;
 ---
 
@@ -30,20 +33,44 @@ const {
       />
     )
   }
-  <div class="overflow-hidden md:w-3/5">
-    <img
-      class="card-img h-64 w-full object-cover md:h-full"
-      src={image}
-      alt={title}
-      loading="lazy"
-    />
+
+  <div class="card-media md:w-3/5">
+    <img class="card-img" src={image} alt={title} loading="lazy" />
+    <span class="card-index" aria-hidden="true">{index}</span>
   </div>
-  <div class="flex flex-col justify-center gap-3 p-8 md:w-2/5 md:p-12">
-    <p class="tag">{category}</p>
-    <h3 class="card-title font-display text-sumi-ink">{title}</h3>
-    <p class="text-[14px] text-stone">{year}</p>
-    {description && <p class="mt-2 text-stone">{description}</p>}
-    <a class="card-link mt-4" href={`/${locale}/projects/${slug}/`}>{viewLabel}</a>
+
+  <div class="card-body md:w-2/5">
+    <div class="card-meta">
+      <span class="tag">{category}</span>
+      <span class="card-year">{year}</span>
+    </div>
+
+    <Title class="card-title font-display mt-4 text-sumi-ink">{title}</Title>
+
+    {description && <p class="mt-4 text-stone">{description}</p>}
+
+    {
+      stack.length > 0 && (
+        <ul class="card-stack mt-6">
+          {stack.map((item) => (
+            <li class="stack-chip">{item}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      external && externalLabel && (
+        <a
+          class="card-link mt-7"
+          href={external}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {externalLabel}
+        </a>
+      )
+    }
   </div>
 </article>
 
@@ -70,6 +97,7 @@ const {
     transform: scaleY(0);
     transform-origin: top;
     transition: transform 400ms ease;
+    z-index: 3;
   }
 
   .project-card:hover {
@@ -82,20 +110,81 @@ const {
     transform: scaleY(1);
   }
 
-  .card-img {
-    filter: grayscale(100%);
-    transition: filter 600ms ease;
-  }
-
-  .project-card:hover .card-img {
-    filter: grayscale(0%);
-  }
-
-  /* Whole card opens the repo (or live site); sits under the case-study link */
   .card-cover {
     position: absolute;
     inset: 0;
     z-index: 1;
+  }
+
+  .card-media {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img {
+    display: block;
+    height: 100%;
+    min-height: 260px;
+    width: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 600ms ease, transform 700ms ease;
+  }
+
+  .project-card:hover .card-img {
+    filter: grayscale(0%);
+    transform: scale(1.02);
+  }
+
+  /* Big plate number, sitting over the image corner */
+  .card-index {
+    position: absolute;
+    left: 20px;
+    top: 12px;
+    z-index: 2;
+    font-family: 'Zen Old Mincho', serif;
+    font-weight: 600;
+    font-size: 60px;
+    line-height: 1;
+    color: var(--washi);
+    mix-blend-mode: difference;
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .card-body {
+      padding: 48px;
+    }
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .card-meta::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--paper-edge);
+  }
+
+  .card-year {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    opacity: 0.75;
+    order: 3;
   }
 
   .card-title {
@@ -108,6 +197,23 @@ const {
     line-height: 1.4;
   }
 
+  .card-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stack-chip {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+    border: 1px solid var(--paper-edge);
+    border-radius: 2px;
+    padding: 4px 10px;
+    background-color: rgba(247, 243, 235, 0.6);
+  }
+
   .card-link {
     position: relative;
     z-index: 2;
@@ -118,7 +224,7 @@ const {
     text-decoration: none;
     border-bottom: 1px solid transparent;
     align-self: flex-start;
-    transition: border-color 300ms ease;
+    transition: border-color 300ms ease, gap 300ms ease;
   }
 
   .card-link:hover {

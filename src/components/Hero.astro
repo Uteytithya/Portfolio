@@ -1,41 +1,113 @@
 ---
+import { Image } from 'astro:assets';
 import Divider from './Divider.astro';
 import KanjiGhost from './KanjiGhost.astro';
+import Seal from './Seal.astro';
+import portrait from '../assets/profile.jpg';
 
 const { locale, t } = Astro.props;
 ---
 
-<section class="relative flex min-h-[78vh] items-center">
-  <div class="reveal w-full py-16 md:w-2/5 md:py-24">
-    <h1 class="font-display text-hero text-sumi-ink">{t.hero.headline}</h1>
-    <p class="hero-subtitle mt-6">{t.hero.subtitle}</p>
-    <div class="mt-10">
+<section class="relative flex min-h-[86vh] flex-col items-center md:flex-row">
+  <!-- vertical kana rail, running down the outer edge -->
+  <span class="hero-rail" aria-hidden="true">{t.hero.rail}</span>
+
+  <div class="reveal w-full py-16 md:w-[46%] md:py-24">
+    <p class="hero-eyebrow">{t.hero.eyebrow}</p>
+
+    <h1 class="font-display text-hero mt-5 text-sumi-ink">{t.hero.headline}</h1>
+
+    <!-- a single brush stroke, drawn beneath the name -->
+    <svg
+      class="hero-stroke"
+      viewBox="0 0 320 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M2 11.5C34 5.5 78 3.2 128 4.4c46 1.1 92 4.6 138 2.2 22-1.1 38-2.4 52-4.1"
+        stroke="currentColor"
+        stroke-width="5"
+        stroke-linecap="round"
+      />
+    </svg>
+
+    <p class="hero-subtitle mt-7">{t.hero.subtitle}</p>
+    <div class="mt-9">
       <Divider />
     </div>
-    <p class="mt-10 max-w-md text-stone">{t.hero.body}</p>
-    <a href={`/${locale}/#work`} class="hero-cta mt-12 inline-block">{t.hero.cta}</a>
+    <p class="mt-9 max-w-md text-stone">{t.hero.body}</p>
+
+    <div class="mt-12 flex flex-wrap items-center gap-5">
+      <a href={`/${locale}/#work`} class="hero-cta">{t.hero.cta}</a>
+      <a href={`/${locale}/#contact`} class="hero-cta-ghost">{t.hero.ctaAlt}</a>
+    </div>
   </div>
 
-  <!-- The right 60%: a portrait resting in the ma, slightly imperfectly hung. -->
-  <div class="relative hidden items-center justify-center self-stretch md:flex md:w-3/5">
+  <div
+    class="relative flex w-full items-center justify-center pb-20 md:w-[54%] md:self-stretch md:pb-0"
+  >
     <figure class="hero-portrait reveal">
-      <img
-        src="/profile.jpg"
-        alt="Nuon Uteytithya"
-        width="1154"
-        height="1280"
+      <!-- The portrait is the LCP element on every first paint, so it is served
+           as responsive AVIF/WebP, eager, and fetched ahead of everything else. -->
+      <Image
+        src={portrait}
+        alt={t.hero.portraitAlt ?? 'Uteytithya Nuon'}
+        widths={[260, 360, 520, 720]}
+        sizes="(min-width: 768px) 28vw, 78vw"
         loading="eager"
+        fetchpriority="high"
+        quality={82}
       />
+      <figcaption class="portrait-seal">
+        <Seal kanji="技" size={76} />
+      </figcaption>
+      <figcaption class="portrait-caption">{t.hero.portraitCaption}</figcaption>
     </figure>
   </div>
+
+  <!-- Decorative cue duplicating the About nav link. Hidden from assistive tech,
+       so it must leave the tab order too — a focusable aria-hidden element is a
+       stop that screen reader users land on with nothing announced. -->
+  <a
+    href={`/${locale}/#about`}
+    class="hero-scroll"
+    aria-hidden="true"
+    tabindex="-1"
+  >
+    <span class="hero-scroll-text">{t.hero.scroll}</span>
+    <span class="hero-scroll-line"></span>
+  </a>
 
   <KanjiGhost kanji="創" />
 </section>
 
 <style>
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+  }
+
+  html[lang='ja'] .hero-eyebrow {
+    letter-spacing: 0.22em;
+  }
+
+  .hero-stroke {
+    display: block;
+    width: min(320px, 80%);
+    height: auto;
+    margin-top: 14px;
+    color: var(--indigo);
+    opacity: 0.5;
+  }
+
   .hero-subtitle {
     font-weight: 400;
-    font-size: 20px;
+    font-size: 21px;
     color: var(--stone);
   }
 
@@ -59,12 +131,48 @@ const { locale, t } = Astro.props;
     background-color: var(--vermilion);
   }
 
+  .hero-cta-ghost {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sumi-ink);
+    text-decoration: none;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--paper-edge);
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+
+  .hero-cta-ghost:hover {
+    color: var(--indigo);
+    border-bottom-color: var(--indigo);
+  }
+
+  /* Vertical kana rail on the far left — visible only on wide screens */
+  .hero-rail {
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 12px;
+    letter-spacing: 0.5em;
+    color: var(--stone);
+    opacity: 0.45;
+    user-select: none;
+  }
+
+  @media (max-width: 1360px) {
+    .hero-rail {
+      display: none;
+    }
+  }
+
   .hero-portrait {
     position: relative;
     transform: rotate(-1.2deg);
   }
 
-  /* An offset gold hairline frame behind the print */
   .hero-portrait::before {
     content: '';
     position: absolute;
@@ -91,5 +199,98 @@ const { locale, t } = Astro.props;
 
   .hero-portrait:hover img {
     filter: none;
+  }
+
+  /* seal pressed over the lower-left corner of the print */
+  .portrait-seal {
+    position: absolute;
+    left: -26px;
+    bottom: 34px;
+    z-index: 2;
+    background-color: var(--washi);
+    padding: 6px;
+    border-radius: 3px;
+  }
+
+  .portrait-caption {
+    position: absolute;
+    right: -18px;
+    bottom: -34px;
+    writing-mode: vertical-rl;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--stone);
+    opacity: 0.6;
+  }
+
+  /* On narrow screens the print sits under the text, so the seal and caption
+     tuck closer in — otherwise they hang past the paper's edge. */
+  @media (max-width: 767px) {
+    .hero-portrait img {
+      width: min(260px, 78vw);
+    }
+
+    .portrait-seal {
+      left: -14px;
+      bottom: 24px;
+    }
+
+    .portrait-caption {
+      right: -10px;
+    }
+  }
+
+  .hero-scroll {
+    position: absolute;
+    left: 0;
+    bottom: 28px;
+    display: none;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  @media (min-width: 768px) {
+    .hero-scroll {
+      display: flex;
+    }
+  }
+
+  .hero-scroll-text {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--stone);
+    opacity: 0.7;
+  }
+
+  .hero-scroll-line {
+    width: 56px;
+    height: 1px;
+    background-color: var(--stone);
+    opacity: 0.4;
+    transform-origin: left;
+    animation: reach 2.8s ease-in-out infinite;
+  }
+
+  @keyframes reach {
+    0%,
+    100% {
+      transform: scaleX(0.4);
+      opacity: 0.25;
+    }
+    50% {
+      transform: scaleX(1);
+      opacity: 0.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-line {
+      animation: none;
+      transform: scaleX(1);
+    }
   }
 </style>
