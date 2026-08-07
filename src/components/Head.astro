@@ -1,0 +1,88 @@
+---
+// Everything a crawler, a social card, or a search result needs.
+// Kept out of BaseLayout so the markup there stays about the page, not the meta.
+import { SITE_URL, PERSON, LOCALES, OG_LOCALE } from '../site';
+
+const {
+  locale = 'en',
+  title,
+  description = '',
+  ogImage = '/og.png',
+  noindex = false
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, SITE_URL).href;
+const ogImageUrl = new URL(ogImage, SITE_URL).href;
+
+// Swap the locale prefix to build the sibling-language URL for hreflang.
+const swapLocale = (target: string) => {
+  const next = path.replace(/^\/(en|ja)(?=\/|$)/, `/${target}`);
+  return new URL(next === path ? `/${target}/` : next, SITE_URL).href;
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: PERSON.name,
+  alternateName: PERSON.alternateName,
+  url: SITE_URL,
+  email: `mailto:${PERSON.email}`,
+  jobTitle: PERSON.jobTitle,
+  sameAs: [PERSON.github],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: PERSON.locality,
+    addressCountry: PERSON.country
+  },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: PERSON.school },
+  knowsLanguage: ['km', 'en', 'ja']
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+
+{noindex && <meta name="robots" content="noindex, follow" />}
+<link rel="canonical" href={canonical} />
+{
+  LOCALES.map((l) => (
+    <link rel="alternate" hreflang={l} href={swapLocale(l)} />
+  ))
+}
+<link rel="alternate" hreflang="x-default" href={swapLocale('en')} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={PERSON.name} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${PERSON.name} — ${PERSON.jobTitle}`} />
+<meta property="og:locale" content={OG_LOCALE[locale as 'en' | 'ja']} />
+{
+  LOCALES.filter((l) => l !== locale).map((l) => (
+    <meta property="og:locale:alternate" content={OG_LOCALE[l]} />
+  ))
+}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+{description && <meta name="twitter:description" content={description} />}
+<meta name="twitter:image" content={ogImageUrl} />
+
+<meta name="author" content={PERSON.name} />
+<!-- Browser chrome picks up the washi paper, so the page does not end at the viewport. -->
+<meta name="theme-color" content="#F7F3EB" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(personSchema)}
+/>

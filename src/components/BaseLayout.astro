@@ -1,31 +1,80 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import Head from './Head.astro';
 import PaperGrain from './PaperGrain.astro';
 import '../styles/global.css';
 
-const { locale = 'en', title, description = '' } = Astro.props;
+const {
+  locale = 'en',
+  title,
+  description = '',
+  skipLabel,
+  noindex = false
+} = Astro.props;
+
+// The skip link is the first thing a screen reader or a Tab press meets, so it
+// speaks the page's own language rather than defaulting to English.
+const skip = skipLabel ?? (locale === 'ja' ? '本文へスキップ' : 'Skip to content');
+
+// Two families carry the entire bilingual site: Zen Old Mincho for display and
+// Zen Kaku Gothic New for body and labels. Both draw their Latin alongside their
+// kana, so English and Japanese share one skeleton.
+//
+// Self-hosted, subset by scripts/build-fonts.py. Served from Google these are
+// CJK fonts split into ~120 unicode-range slices, and the ~55 Japanese
+// characters on the English page alone dragged in 1.35 MB across 118 requests.
+// The subsets are 5 files totalling ~330 KB, with no third-party connection.
+//
+// The two faces below carry first paint (body text and the h1); the rest load
+// from fonts.css without blocking. `crossorigin` is required on font preloads
+// even same-origin, or the browser fetches the file twice.
+const PRELOAD = [
+  '/fonts/zen-kaku-gothic-new-400.woff2',
+  locale === 'ja'
+    ? '/fonts/zen-old-mincho-500.woff2'
+    : '/fonts/zen-old-mincho-600.woff2'
+];
 ---
 
 <!doctype html>
 <html lang={locale}>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
-      rel="stylesheet"
+    <Head
+      locale={locale}
+      title={title}
+      description={description}
+      noindex={noindex}
     />
+
+    {
+      PRELOAD.map((href) => (
+        <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />
+      ))
+    }
+    <!-- Same origin now, so there is no third-party round-trip to hide behind a
+         media=print trick — this is a small local stylesheet. `font-display:
+         swap` inside it keeps text readable while the faces land. -->
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+
+    <!-- Reveal animations start at opacity 0 and are cleared by script. Without
+         this the whole page would be blank to anyone browsing without JS. -->
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+
     <ClientRouter />
   </head>
   <body>
     <PaperGrain />
+    <a href="#main" class="skip-link">{skip}</a>
+    <span class="scroll-thread" aria-hidden="true"></span>
     <slot name="nav" />
-    <main class="mx-auto w-full max-w-site px-6 md:px-16">
+    <main id="main" class="mx-auto w-full max-w-site px-6 md:px-16">
       <slot />
     </main>
     <slot name="footer" />
@@ -34,6 +83,14 @@ const { locale = 'en', title, description = '' } = Astro.props;
       function observeReveals() {
         const els = document.querySelectorAll('.reveal:not(.revealed)');
         if (!els.length) return;
+
+        // Same reasoning as the noscript block: if we cannot observe, show
+        // everything immediately rather than leave the page invisible.
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('revealed'));
+          return;
+        }
+
         const io = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {
@@ -47,8 +104,41 @@ const { locale = 'en', title, description = '' } = Astro.props;
         );
         els.forEach((el) => io.observe(el));
       }
-      observeReveals();
-      document.addEventListener('astro:page-load', observeReveals);
+
+      // The thread down the left margin is driven by a scroll-linked animation
+      // where that exists (Chromium). Safari and Firefox get the same effect
+      // from a rAF-throttled scroll listener instead of nothing at all.
+      function threadFallback() {
+        const thread = document.querySelector<HTMLElement>('.scroll-thread');
+        if (!thread) return;
+        if (CSS.supports('animation-timeline: scroll(root block)')) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        thread.classList.add('scroll-thread--js');
+        let ticking = false;
+        const paint = () => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = max > 0 ? window.scrollY / max : 0;
+          thread.style.transform = `scaleY(${Math.min(1, Math.max(0, progress))})`;
+          ticking = false;
+        };
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(paint);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        paint();
+      }
+
+      function init() {
+        observeReveals();
+        threadFallback();
+      }
+
+      init();
+      document.addEventListener('astro:page-load', init);
     </script>
   </body>
 </html>
