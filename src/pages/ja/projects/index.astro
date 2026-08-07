@@ -8,11 +8,15 @@ import t from '../../../i18n/ja.json';
 const locale = 'ja';
 ---
 
-<BaseLayout locale={locale} title={`${t.work.title} — ${t.siteTitle}`}>
+<BaseLayout
+  locale={locale}
+  title={`${t.work.title} — ${t.siteTitle}`}
+  description={t.work.description}
+>
   <Navigation slot="nav" locale={locale} t={t} />
   <div class="pt-8">
     <a href={`/${locale}/`} class="label text-stone hover:text-indigo">{t.back}</a>
   </div>
-  <WorkSection locale={locale} t={t} />
+  <WorkSection locale={locale} t={t} as="h1" />
   <Contact slot="footer" locale={locale} t={t} />
 </BaseLayout>

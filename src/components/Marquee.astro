@@ -1,0 +1,91 @@
+---
+// A slow band of drifting text — motion at the edge of notice.
+const { items = [] } = Astro.props;
+const line = [...items, ...items, ...items];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {
+      [0, 1].map(() => (
+        <div class="marquee-group">
+          {line.map((item) => (
+            <span class="marquee-item">
+              {item}
+              <span class="marquee-dot">◦</span>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--paper-edge);
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 18px 0;
+    margin: 24px 0;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: drift 64s linear infinite;
+  }
+
+  .marquee-group {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 14px;
+    letter-spacing: 0.24em;
+    color: var(--stone);
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  .marquee-dot {
+    color: var(--gold);
+    font-size: 10px;
+  }
+
+  @keyframes drift {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

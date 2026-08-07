@@ -1,0 +1,32 @@
+---
+// Hanko — a vermilion name seal, pressed slightly off-square as a real one would be.
+const { kanji = '技', size = 72 } = Astro.props;
+---
+
+<span class="seal" style={`--seal-size:${size}px`} aria-hidden="true">
+  <span class="seal-glyph">{kanji}</span>
+</span>
+
+<style>
+  .seal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--seal-size);
+    height: var(--seal-size);
+    border: 2.5px solid var(--vermilion);
+    border-radius: 3px;
+    transform: rotate(-4deg);
+    opacity: 0.88;
+    /* uneven ink, as if pressed by hand */
+    box-shadow: inset 0 0 0 1px rgba(199, 62, 58, 0.25);
+  }
+
+  .seal-glyph {
+    font-family: 'Zen Old Mincho', serif;
+    font-weight: 600;
+    font-size: calc(var(--seal-size) * 0.5);
+    line-height: 1;
+    color: var(--vermilion);
+  }
+</style>

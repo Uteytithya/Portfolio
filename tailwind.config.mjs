@@ -15,8 +15,8 @@ export default {
         matcha: '#7A8B5E'
       },
       fontFamily: {
-        'display-en': ['"Cormorant Garamond"', 'serif'],
-        'body-en': ['Inter', 'sans-serif'],
+        'display-en': ['"Playfair Display"', 'serif'],
+        'body-en': ['"Zen Kaku Gothic New"', 'sans-serif'],
         'display-ja': ['"Noto Serif JP"', 'serif'],
         'body-ja': ['"Zen Kaku Gothic New"', 'sans-serif']
       },

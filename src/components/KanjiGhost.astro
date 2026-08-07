@@ -2,20 +2,35 @@
 const { kanji, tone = 'dark' } = Astro.props;
 ---
 
-<span
-  aria-hidden="true"
-  class:list={['kanji-ghost', { 'kanji-ghost--light': tone === 'light' }]}
->
-  {kanji}
+<!-- The glyph is meant to bleed off the section's right edge. Left to itself it
+     bled past the *viewport* too, which let every page scroll sideways by ~44px.
+     The wrapper pins it to the section box and clips the overhang, so the look
+     is unchanged and the overflow can never reach the document.
+     `clip` rather than `hidden`: hidden would make this a scroll container. -->
+<span class="kanji-ghost-clip" aria-hidden="true">
+  <span
+    class:list={['kanji-ghost', { 'kanji-ghost--light': tone === 'light' }]}
+  >
+    {kanji}
+  </span>
 </span>
 
 <style>
+  .kanji-ghost-clip {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
   .kanji-ghost {
     position: absolute;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Zen Old Mincho', serif;
     font-weight: 400;
     font-size: 200px;
     line-height: 1;
@@ -23,7 +38,6 @@ const { kanji, tone = 'dark' } = Astro.props;
     writing-mode: vertical-rl;
     user-select: none;
     pointer-events: none;
-    z-index: 0;
   }
 
   .kanji-ghost--light {
@@ -31,8 +45,8 @@ const { kanji, tone = 'dark' } = Astro.props;
   }
 
   @media (max-width: 767px) {
-    .kanji-ghost {
-      opacity: 0;
+    .kanji-ghost-clip {
+      display: none;
     }
   }
 </style>

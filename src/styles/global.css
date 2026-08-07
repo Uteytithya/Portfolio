@@ -11,6 +11,11 @@
   --indigo: #223A5E;
   --vermilion: #C73E3A;
   --gold: #C9A96E;
+  /* The same gold, taken down far enough to be legible as small text on washi
+     (4.7:1 vs the 2.0:1 of --gold). --gold itself stays as-is for hairlines,
+     borders, and any text sitting on the dark sumi surfaces, where it is
+     already well clear of AA. */
+  --gold-ink: #856830;
   --matcha: #7A8B5E;
   --paper-edge: rgba(0, 0, 0, 0.08);
   --ink-wash: rgba(43, 41, 40, 0.06);
@@ -21,41 +26,54 @@
 html {
   background-color: var(--washi);
   scroll-behavior: smooth;
+  /* The nav is sticky and 64px tall — without this, every in-page anchor lands
+     with its section heading tucked underneath it. */
+  scroll-padding-top: 88px;
 }
 
+/* One body face for both languages, as with the display face above. Zen Kaku
+   Gothic New draws its Latin alongside its kana, so the whole site now runs on
+   two families — this one and Zen Old Mincho. */
 body {
   background-color: var(--washi);
   color: var(--sumi-ink);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
   font-weight: 400;
-  font-size: 17px;
+  /* 18px, not the 17px this held under Inter. Zen Kaku scales its Latin down to
+     sit beside full-width kana, so its x-height is 0.48em against Inter's 0.55 —
+     the same pixel size reads about 13% smaller. Cap height is nearly unchanged
+     (0.70 vs 0.73), which is why the uppercase labels keep their sizes and only
+     lowercase running text is bumped. */
+  font-size: 18px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+/* Japanese still wants its own measure — denser type, more leading — but no
+   longer a different family. */
 html[lang='ja'] body {
-  font-family: 'Zen Kaku Gothic New', sans-serif;
   font-size: 16px;
   line-height: 2;
 }
 
 /* ── Typography roles ─────────────────────────────── */
 
+/* One display face for both languages. Zen Old Mincho draws its Latin alongside
+   its kana and kanji, so English and Japanese finally share a skeleton instead
+   of being a Didone and a Mincho standing next to each other. No `lang` override
+   is needed here any more — only the sizing rules below still differ. */
 .font-display {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Zen Old Mincho', serif;
   font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-html[lang='ja'] .font-display {
-  font-family: 'Noto Serif JP', serif;
-  font-weight: 500;
+  /* Mincho letterforms are already tightly fitted; the negative tracking that
+     opened up Playfair closes these up too far. */
   letter-spacing: 0;
 }
 
 .text-hero {
   font-size: clamp(48px, 7.5vw, 72px);
+  font-weight: 600;
   line-height: 1.08;
 }
 
@@ -84,9 +102,13 @@ html[lang='ja'] .label {
   letter-spacing: 0.06em;
 }
 
+/* Zen Kaku Gothic New has no 600 — it steps 500 → 700 — so the label styles
+   that used to sit at Inter's semibold now use 500. At 700 these small tracked
+   caps turn clumsy against the paper. (.text-hero and the seal keep 600: those
+   are set in Zen Old Mincho, which does have it.) */
 .tag {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--indigo);
@@ -117,7 +139,7 @@ html[lang='ja'] .label {
 
 .prose-quiet h2,
 .prose-quiet h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Zen Old Mincho', serif;
   font-weight: 500;
   color: var(--sumi-ink);
   margin-top: 2.5em;
@@ -127,8 +149,6 @@ html[lang='ja'] .label {
 
 html[lang='ja'] .prose-quiet h2,
 html[lang='ja'] .prose-quiet h3 {
-  font-family: 'Noto Serif JP', serif;
-  font-weight: 500;
   font-size: 26px;
 }
 
@@ -159,4 +179,86 @@ html[lang='ja'] .prose-quiet h3 {
 
 ::selection {
   background: rgba(34, 58, 94, 0.15);
+}
+
+/* ── Keyboard focus ───────────────────────────────── */
+
+/* Nothing here is visible to a mouse; it appears only once someone is actually
+   navigating by keyboard. Indigo rather than the browser default so it belongs
+   to the palette, with an offset ring so it reads on both washi and sumi. */
+:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* On the dark plates indigo disappears — the gold is what stays legible. */
+.site-footer :focus-visible,
+.tech-plate :focus-visible {
+  outline-color: var(--gold);
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 100;
+  padding: 12px 22px;
+  background-color: var(--washi-warm);
+  border: 1px solid var(--indigo);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--indigo);
+  text-decoration: none;
+  /* Held just out of view until focused, rather than display:none, so it stays
+     in the tab order. */
+  transform: translateY(-150%);
+  transition: transform 200ms ease;
+}
+
+/* :focus, not :focus-visible — the link is unreachable by pointer anyway, and
+   this way it also appears for focus moved programmatically. */
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ── Scroll progress: a thread of ink down the left margin ── */
+
+.scroll-thread {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100vh;
+  z-index: 50;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--indigo),
+    var(--vermilion)
+  );
+  transform-origin: top;
+  transform: scaleY(0);
+  animation: thread linear;
+  animation-timeline: scroll(root block);
+}
+
+/* Safari and Firefox have no scroll-linked animations yet; there the thread is
+   driven from JS, and must not also carry the (never-advancing) animation. */
+.scroll-thread--js {
+  animation: none;
+}
+
+@keyframes thread {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-thread {
+    display: none;
+  }
 }

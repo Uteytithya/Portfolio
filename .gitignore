@@ -6,3 +6,13 @@ dist/
 .DS_Store
 .env
 .env.*
+
+# Cached upstream font sources for scripts/build-fonts.py (20 MB of TTFs).
+# The subsetted woff2 in public/fonts/ are committed; these are not.
+.fontcache/
+
+# Python bytecode from scripts/
+__pycache__/
+
+# Intermediate for the social card; public/og.png is the committed output.
+scripts/og.svg

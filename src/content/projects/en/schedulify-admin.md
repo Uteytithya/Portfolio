@@ -4,9 +4,10 @@ category: "Backend Developer"
 year: 2025
 image: "/projects/schedulify-thumb.svg"
 repo: "https://github.com/Uteytithya/SchedulifyAdmin"
+stack: ["Laravel", "PHP", "MySQL", "JWT", "Blade", "Tailwind"]
 order: 2
 ---
-The administrative backend for Schedulify, a scheduling management platform — a Laravel application that keeps timetables, users, and permissions in quiet order.
+The administrative backend for Schedulify, a scheduling management platform — a Laravel application that holds timetables, users, and permissions in dependable order.
 
 ## The brief
 
@@ -14,7 +15,7 @@ Scheduling looks simple until people share it: overlapping bookings, shifting av
 
 ## The approach
 
-A standard Laravel MVC architecture, kept deliberately clean — REST endpoints for scheduling operations, JWT-based authentication guarding the admin surface, and MySQL behind versioned migrations so the schema's history is as readable as its present. Blade templates with Tailwind CSS render the admin views; PHPUnit covers the critical paths.
+I kept the Laravel MVC architecture deliberately clean — REST endpoints for scheduling operations, JWT-based authentication guarding the admin surface, and MySQL behind versioned migrations so the schema's history is as readable as its present. I rendered the admin views in Blade with Tailwind CSS, and covered the critical paths with PHPUnit.
 
 ## The result
 

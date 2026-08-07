@@ -1,5 +1,5 @@
 ---
-import Divider from './Divider.astro';
+import SectionHeader from './SectionHeader.astro';
 import KanjiGhost from './KanjiGhost.astro';
 
 const { t } = Astro.props;
@@ -11,14 +11,19 @@ const iconSlug = {
   TypeScript: 'typescript',
   Python: 'python',
   Dart: 'dart',
+  'C++': 'cpp',
+  // Java has no mark of its own in Simple Icons; OpenJDK's duke is the stand-in.
+  Java: 'java',
   Laravel: 'laravel',
   Nuxt: 'nuxt',
   Flutter: 'flutter',
   Express: 'express',
+  Svelte: 'svelte',
   PostgreSQL: 'postgresql',
   MySQL: 'mysql',
   Redis: 'redis',
   Firebase: 'firebase',
+  'Google Cloud': 'googlecloud',
   Git: 'git',
   Docker: 'docker',
   AWS: 'aws'
@@ -36,15 +41,15 @@ const iconMarkup = (name) =>
 ---
 
 <section id="tech" class="section">
-  <div class="reveal">
-    <h2 class="font-display text-section text-sumi-ink">{t.techStack.title}</h2>
-    <div class="mt-8">
-      <Divider />
-    </div>
-  </div>
+  <SectionHeader
+    num={t.techStack.num}
+    kanji={t.techStack.kanji}
+    title={t.techStack.title}
+    sub={t.techStack.sub}
+  />
 
   <!-- An ink slab: dark industrial plate, Endfield-inspired -->
-  <div class="tech-plate reveal mt-16">
+  <div class="tech-plate reveal mt-14">
     <span class="plate-corner plate-corner--tl" aria-hidden="true"></span>
     <span class="plate-corner plate-corner--tr" aria-hidden="true"></span>
     <span class="plate-corner plate-corner--bl" aria-hidden="true"></span>

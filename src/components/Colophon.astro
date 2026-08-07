@@ -1,0 +1,119 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import KanjiGhost from './KanjiGhost.astro';
+
+const { t } = Astro.props;
+---
+
+<section class="section">
+  <SectionHeader
+    as="h1"
+    num="—"
+    kanji={t.colophon.kanji}
+    title={t.colophon.title}
+    sub={t.colophon.sub}
+  />
+
+  <p class="colophon-intro reveal mt-10">{t.colophon.intro}</p>
+
+  <div class="colophon-groups mt-16">
+    {
+      t.colophon.groups.map((group) => (
+        <section class="colophon-group reveal">
+          <h2 class="group-label">{group.label}</h2>
+          <dl class="group-rows">
+            {group.rows.map((row) => (
+              <div class="group-row">
+                <dt class="row-key">{row.k}</dt>
+                <dd class="row-value">{row.v}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))
+    }
+  </div>
+
+  <KanjiGhost kanji="記" />
+</section>
+
+<style>
+  .colophon-intro {
+    max-width: 62ch;
+    font-size: 19px;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+
+  html[lang='ja'] .colophon-intro {
+    font-size: 17px;
+  }
+
+  .colophon-groups {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .colophon-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 56px 64px;
+    }
+  }
+
+  .group-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  html[lang='ja'] .group-label {
+    letter-spacing: 0.1em;
+  }
+
+  .group-rows {
+    margin-top: 14px;
+  }
+
+  .group-row {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+
+  .group-row:first-child {
+    border-top: 1px solid var(--paper-edge);
+  }
+
+  @media (max-width: 480px) {
+    .group-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+
+  .row-key {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--stone);
+    opacity: 0.65;
+    padding-top: 3px;
+  }
+
+  html[lang='ja'] .row-key {
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+
+  .row-value {
+    font-size: 15px;
+    color: var(--sumi-ink);
+  }
+</style>

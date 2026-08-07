@@ -19,9 +19,18 @@ export async function getStaticPaths() {
 const locale = 'en';
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+// First paragraph of the case study doubles as the meta description.
+const excerpt = ((entry.body ?? '').trim().split(/\r?\n\s*\r?\n/)[0] ?? '')
+  .replace(/\r?\n/g, ' ')
+  .slice(0, 200);
 ---
 
-<BaseLayout locale={locale} title={`${entry.data.title} — ${t.siteTitle}`}>
+<BaseLayout
+  locale={locale}
+  title={`${entry.data.title} — ${t.siteTitle}`}
+  description={excerpt}
+>
   <Navigation slot="nav" locale={locale} t={t} />
   <article class="section">
     <a href={`/${locale}/`} class="label text-stone hover:text-indigo">{t.back}</a>
@@ -36,6 +45,7 @@ const { Content } = await render(entry);
       class="mt-12 w-full rounded-[2px] border border-black/[0.06]"
       src={entry.data.image}
       alt={entry.data.title}
+      loading="eager"
     />
     <div class="prose-quiet mt-12 max-w-[640px]">
       <Content />

@@ -4,6 +4,7 @@ category: "Flutter Mobile Developer"
 year: 2025
 image: "/projects/race-thumb.svg"
 repo: "https://github.com/Uteytithya/race_tracker"
+stack: ["Flutter", "Dart", "Firebase", "Realtime DB"]
 order: 4
 ---
 A cross-platform Flutter app for tracking races as they happen — times, positions, and progress synced live across every device through Firebase.
@@ -14,7 +15,7 @@ Race day is chaos: timekeepers at different points on the course, spectators wan
 
 ## The approach
 
-Flutter carries the interface to iOS, Android, web, and desktop from a single Dart codebase. Firebase Realtime Database does the synchronizing — a time recorded at the finish line appears everywhere else the moment it lands. The architecture keeps tracking logic separate from presentation, so new race formats slot in without touching the UI.
+I built it in Flutter so a single Dart codebase carries the interface to iOS, Android, web, and desktop, and leaned on Firebase Realtime Database for the synchronizing — a time recorded at the finish line appears everywhere else the moment it lands. I kept tracking logic separate from presentation, so new race formats slot in without touching the UI.
 
 ## The result
 

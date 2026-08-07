@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://uteytithya.dev/sitemap-index.xml

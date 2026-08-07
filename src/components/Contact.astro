@@ -1,5 +1,4 @@
 ---
-import Divider from './Divider.astro';
 import KanjiGhost from './KanjiGhost.astro';
 
 const { locale, t } = Astro.props;
@@ -8,18 +7,25 @@ const base = `/${locale}`;
 const navLinks = [
   { href: `${base}/#work`, label: t.nav.work },
   { href: `${base}/#about`, label: t.nav.about },
+  { href: `${base}/#experience`, label: t.experience.title },
   { href: `${base}/#tech`, label: t.techStack.title }
 ];
 ---
 
 <footer id="contact" class="site-footer">
   <div class="relative mx-auto w-full max-w-site px-6 py-20 md:px-16 md:py-28">
-    <h2 class="footer-title font-display text-section">{t.contact.title}</h2>
-    <div class="mt-8">
-      <Divider />
+    <div class="footer-rule">
+      <span class="footer-kanji">{t.contact.kanji}</span>
+      <span class="footer-line"></span>
+      <span class="footer-num">{t.contact.num}</span>
     </div>
 
-    <p class="mt-12">
+    <h2 class="footer-title font-display text-section mt-6">{t.contact.title}</h2>
+    <p class="footer-sub mt-3">{t.contact.sub}</p>
+
+    <p class="footer-invitation mt-10">{t.contact.invitation}</p>
+
+    <p class="mt-8">
       <a class="footer-email" href={`mailto:${t.contact.email}`}>
         {t.contact.email}
       </a>
@@ -72,7 +78,9 @@ const navLinks = [
       class="footer-bottom mt-20 flex flex-col gap-3 border-t pt-8 md:flex-row md:items-center md:justify-between"
     >
       <p class="footer-farewell">{t.contact.farewell}</p>
-      <p class="footer-colophon">{t.contact.colophon}</p>
+      <p class="footer-colophon">
+        {t.contact.colophon} · <a href={`${base}/colophon/`}>{t.colophon.title}</a>
+      </p>
     </div>
 
     <KanjiGhost kanji="縁" tone="light" />
@@ -93,6 +101,55 @@ const navLinks = [
 
   .footer-title {
     color: var(--washi);
+  }
+
+  .footer-rule {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .footer-kanji {
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 15px;
+    color: var(--vermilion);
+    flex-shrink: 0;
+  }
+
+  .footer-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(247, 243, 235, 0.22),
+      rgba(247, 243, 235, 0.04)
+    );
+  }
+
+  .footer-num {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: rgba(247, 243, 235, 0.5);
+    flex-shrink: 0;
+  }
+
+  .footer-sub {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  html[lang='ja'] .footer-sub {
+    letter-spacing: 0.2em;
+  }
+
+  .footer-invitation {
+    max-width: 460px;
+    font-size: 17px;
+    color: rgba(247, 243, 235, 0.68);
   }
 
   .footer-email {
@@ -116,14 +173,14 @@ const navLinks = [
 
   .footer-label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--gold);
   }
 
   .footer-link {
-    font-size: 15px;
+    font-size: 16px;
     color: rgba(247, 243, 235, 0.72);
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -143,7 +200,7 @@ const navLinks = [
   .footer-farewell {
     font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 400;
-    font-size: 15px;
+    font-size: 16px;
     color: rgba(247, 243, 235, 0.55);
   }
 
@@ -151,5 +208,17 @@ const navLinks = [
     font-size: 13px;
     letter-spacing: 0.04em;
     color: rgba(247, 243, 235, 0.4);
+  }
+
+  .footer-colophon a {
+    color: rgba(247, 243, 235, 0.6);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+
+  .footer-colophon a:hover {
+    color: var(--gold);
+    border-bottom-color: rgba(201, 169, 110, 0.5);
   }
 </style>

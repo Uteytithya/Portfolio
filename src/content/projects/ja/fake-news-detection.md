@@ -4,6 +4,7 @@ category: "ML開発"
 year: "2025年"
 image: "/projects/fakenews-thumb.svg"
 repo: "https://github.com/Uteytithya/fake_covid_news_detection"
+stack: ["Python", "scikit-learn", "TF-IDF", "Jupyter", "Pandas"]
 order: 3
 ---
 COVID-19 の正しい報道と誤情報を見分ける機械学習分類器。生のテキストから判定まで、透明で再現可能なパイプラインとして組み上げました。
