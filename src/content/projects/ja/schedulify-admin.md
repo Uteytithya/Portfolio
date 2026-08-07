@@ -4,9 +4,10 @@ category: "バックエンド開発"
 year: "2025年"
 image: "/projects/schedulify-thumb.svg"
 repo: "https://github.com/Uteytithya/SchedulifyAdmin"
+stack: ["Laravel", "PHP", "MySQL", "JWT", "Blade", "Tailwind"]
 order: 2
 ---
-スケジュール管理プラットフォーム Schedulify の管理バックエンド。予定表も、ユーザーも、権限も、静かに整えつづける Laravel アプリケーションです。
+スケジュール管理プラットフォーム Schedulify の管理バックエンド。予定表も、ユーザーも、権限も、確かに支えつづける Laravel アプリケーションです。
 
 ## 課題
 

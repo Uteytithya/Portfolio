@@ -1,27 +1,151 @@
 {
   "siteTitle": "Uteytithya Nuon — Portfolio",
-  "nav": { "work": "Work", "about": "About", "contact": "Contact" },
-  "hero": {
-    "headline": "Uteytithya Nuon",
-    "subtitle": "Backend Developer — quiet craft, made with intention",
-    "cta": "View Work ↓",
-    "body": "A backend developer who believes the best work doesn't need to shout. Laravel and Nuxt on the web, Flutter on mobile, machine learning when the problem asks for it. Thoughtful. Deliberate. Quiet."
+  "nav": {
+    "work": "Work",
+    "about": "About",
+    "contact": "Contact"
   },
+  "hero": {
+    "eyebrow": "Backend · ML · Mobile",
+    "headline": "Uteytithya Nuon",
+    "subtitle": "Backend Developer — the strength beneath the floor",
+    "cta": "View Work ↓",
+    "ctaAlt": "Get in touch",
+    "rail": "縁の下 — BENEATH THE FLOOR",
+    "portraitCaption": "プノンペン",
+    "scroll": "Scroll",
+    "body": "A backend developer drawn to the part nobody sees — the services, schemas, and pipelines everything else stands on. Laravel and Nuxt on the web, Flutter on mobile, machine learning when the problem asks for it. Built to hold.",
+    "portraitAlt": "Uteytithya Nuon"
+  },
+  "marquee": [
+    "縁の下の力持ち",
+    "BENEATH THE FLOOR",
+    "間 — MA",
+    "土台 — DODAI",
+    "BACKEND ENGINEERING",
+    "簡素 — KANSO"
+  ],
   "about": {
+    "num": "01",
+    "kanji": "一",
     "title": "About",
+    "sub": "わたしについて",
     "body1": "I'm Uteytithya Nuon, a developer from Phnom Penh — studying Computer Science with a focus on Software Engineering at the Cambodia Academy of Digital Technology, and building things end to end: secure Laravel backends, Nuxt frontends, Flutter apps, and ML pipelines with TensorFlow and scikit-learn.",
     "body2": "From NLP document processing at InternLink to quantum ML research and Robocon robotics, my approach stays the same: remove until nothing remains but what is essential — then make it fast, and make it hold.",
     "quote": "静けさの中に力がある",
-    "quoteTranslation": "Strength resides in stillness."
+    "quoteTranslation": "Strength resides in stillness.",
+    "facts": [
+      {
+        "label": "Based in",
+        "value": "Phnom Penh, Cambodia"
+      },
+      {
+        "label": "Studying",
+        "value": "Computer Science — Software Engineering, CADT"
+      },
+      {
+        "label": "Focus",
+        "value": "Backend systems, ML pipelines, mobile"
+      },
+      {
+        "label": "Languages",
+        "value": "Khmer · English · 日本語"
+      }
+    ]
   },
   "work": {
+    "num": "02",
+    "kanji": "二",
     "title": "Selected Work",
+    "sub": "作品集",
     "viewCaseStudy": "View Case Study →",
     "viewOnGitHub": "View on GitHub →",
-    "visitSite": "Visit Site →"
+    "visitSite": "Visit Site →",
+    "description": "Selected backend, machine learning, and mobile projects by Uteytithya Nuon — case studies with the stack and the reasoning behind each."
+  },
+  "experience": {
+    "num": "03",
+    "kanji": "三",
+    "title": "Experience",
+    "sub": "経歴",
+    "items": [
+      {
+        "period": "Jan 2026 — Jul 2026",
+        "role": "Backend & AI Developer Intern",
+        "org": "Scholarar Cambodia",
+        "orgUrl": "https://ai.scholarar.com/auth",
+        "body": "Built the AI-facing backend for a scholarship platform — a graph database modelling how scholarships, eligibility rules, and student profiles relate, so the system can match a student to what they actually qualify for. Added a double-entry ledger attributing every AI API call to a user and session, and MCP tools that give agents sandboxed, permissioned access to internal data.",
+        "tags": [
+          "MCP",
+          "Graph Database",
+          "LLM",
+          "REST API",
+          "Double-Entry Ledger"
+        ]
+      },
+      {
+        "period": "Oct 2025 — Dec 2025",
+        "role": "Machine Learning Developer",
+        "org": "InternLink",
+        "orgUrl": "https://github.com/InternLink-TheNextStep",
+        "body": "Built the CV understanding service — an ensemble of LayoutLM models that reads a resume by its layout, not just its text, classifying candidates across five developer and data roles. Shipped as a containerized FastAPI service with confidence scores on every prediction, and a caching layer that halved the load time for processed results.",
+        "tags": [
+          "Python",
+          "FastAPI",
+          "LayoutLM",
+          "PyMuPDF",
+          "Docker"
+        ]
+      },
+      {
+        "period": "Oct 2025 — Dec 2025",
+        "role": "Quantum ML Researcher",
+        "org": "Quantum Protein Fold Prediction",
+        "body": "Built a quantum-assisted model for predicting protein folds, tested against simulated quantum devices. Tuned the circuit parameters for stability and accuracy, then measured the hybrid quantum–classical approach against classical baselines.",
+        "tags": [
+          "Quantum ML",
+          "Python",
+          "Hybrid Quantum–Classical"
+        ]
+      },
+      {
+        "period": "Apr 2025 — Jul 2025",
+        "role": "Full-Stack Developer Intern",
+        "org": "Ang Seong Language School",
+        "body": "Built and maintained the RESTful services behind class scheduling and report generation — the endpoints carrying the school's daily operations. Refactored data fetching onto server-side caching, cutting page load latency in half.",
+        "tags": [
+          "Laravel",
+          "PHP",
+          "REST API",
+          "Caching"
+        ]
+      },
+      {
+        "period": "May 2024 — Jul 2024",
+        "role": "Robotics Developer",
+        "org": "Robocon 2024",
+        "body": "Built the real-time link between robot and control computer — a high-speed communication system for live control during runs. Worked close to the metal in embedded C/C++, wiring sensor integration and device control across the platform.",
+        "tags": [
+          "C++",
+          "Embedded",
+          "IoT",
+          "Robotics"
+        ]
+      },
+      {
+        "period": "2023 — Present",
+        "role": "BSc Computer Science — Software Engineering",
+        "org": "Cambodia Academy of Digital Technology",
+        "body": "",
+        "tags": []
+      }
+    ]
   },
   "techStack": {
+    "num": "04",
+    "kanji": "四",
     "title": "Tools & Craft",
+    "sub": "道具と技",
     "categories": {
       "languages": "Languages",
       "frameworks": "Frameworks",
@@ -29,14 +153,41 @@
       "tools": "Tools"
     },
     "items": {
-      "languages": ["PHP", "TypeScript", "Python", "Dart"],
-      "frameworks": ["Laravel", "Nuxt", "Flutter", "Express"],
-      "data": ["PostgreSQL", "MySQL", "Redis", "Firebase"],
-      "tools": ["Git", "Docker", "AWS"]
+      "languages": [
+        "PHP",
+        "TypeScript",
+        "Python",
+        "Dart",
+        "C++",
+        "Java"
+      ],
+      "frameworks": [
+        "Laravel",
+        "Nuxt",
+        "Flutter",
+        "Express",
+        "Svelte"
+      ],
+      "data": [
+        "PostgreSQL",
+        "MySQL",
+        "Redis",
+        "Firebase",
+        "Google Cloud"
+      ],
+      "tools": [
+        "Git",
+        "Docker",
+        "AWS"
+      ]
     }
   },
   "contact": {
+    "num": "05",
+    "kanji": "五",
     "title": "Get in Touch",
+    "sub": "お問い合わせ",
+    "invitation": "Open to internships and collaboration — say hello.",
     "email": "uteytithya@gmail.com",
     "github": "GitHub — @Uteytithya",
     "githubUrl": "https://github.com/Uteytithya",
@@ -45,7 +196,112 @@
     "locationLabel": "Location",
     "location": "Phnom Penh, Cambodia",
     "farewell": "Until we meet again — また逢う日まで",
-    "colophon": "© 2026 Nuon Uteytithya · Built quietly with Astro"
+    "colophon": "© 2026 Nuon Uteytithya"
+  },
+  "colophon": {
+    "kanji": "記",
+    "title": "Colophon",
+    "sub": "奥付",
+    "intro": "A note on how this site is made — the type, the palette, and the machinery beneath the paper. Fitting, for a page about the work that holds things up.",
+    "groups": [
+      {
+        "label": "Type",
+        "rows": [
+          {
+            "k": "Display",
+            "v": "Zen Old Mincho"
+          },
+          {
+            "k": "Text",
+            "v": "Zen Kaku Gothic New"
+          },
+          {
+            "k": "Both languages",
+            "v": "Two families — Latin and kana drawn together"
+          }
+        ]
+      },
+      {
+        "label": "Palette",
+        "rows": [
+          {
+            "k": "Washi paper",
+            "v": "#F7F3EB"
+          },
+          {
+            "k": "Sumi ink",
+            "v": "#2B2928"
+          },
+          {
+            "k": "Indigo",
+            "v": "#223A5E"
+          },
+          {
+            "k": "Vermilion",
+            "v": "#C73E3A"
+          },
+          {
+            "k": "Gold",
+            "v": "#C9A96E"
+          }
+        ]
+      },
+      {
+        "label": "Built with",
+        "rows": [
+          {
+            "k": "Framework",
+            "v": "Astro 5 — static output"
+          },
+          {
+            "k": "Styling",
+            "v": "Tailwind CSS, with scoped component styles"
+          },
+          {
+            "k": "Islands",
+            "v": "React — one, for the language switcher"
+          },
+          {
+            "k": "Content",
+            "v": "Markdown collections, one per language"
+          }
+        ]
+      },
+      {
+        "label": "Details",
+        "rows": [
+          {
+            "k": "Navigation",
+            "v": "View Transitions, via Astro's ClientRouter"
+          },
+          {
+            "k": "Scroll thread",
+            "v": "CSS scroll-driven animation, with a JavaScript fallback where that is unsupported"
+          },
+          {
+            "k": "Motion",
+            "v": "Every animation yields to prefers-reduced-motion"
+          },
+          {
+            "k": "Privacy",
+            "v": "No analytics. No cookies."
+          }
+        ]
+      },
+      {
+        "label": "Elsewhere",
+        "rows": [
+          {
+            "k": "Hosting",
+            "v": "Vercel"
+          },
+          {
+            "k": "Principles",
+            "v": "間 (ma) · 簡素 (kanso) · 侘寂 (wabi-sabi)"
+          }
+        ]
+      }
+    ]
   },
   "back": "← Back"
 }

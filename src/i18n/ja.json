@@ -1,27 +1,151 @@
 {
   "siteTitle": "ヌオン・ウテイティチャ — ポートフォリオ",
-  "nav": { "work": "作品", "about": "わたしについて", "contact": "お問い合わせ" },
-  "hero": {
-    "headline": "ヌオン・ウテイティチャ",
-    "subtitle": "バックエンド開発者 — 心を込めて、ひとつひとつ",
-    "cta": "作品を見る ↓",
-    "body": "最良の仕事は、声を張り上げない。ウェブは Laravel と Nuxt、モバイルは Flutter、必要なときには機械学習。考え抜かれた設計と、無駄のないコード。"
+  "nav": {
+    "work": "作品",
+    "about": "わたしについて",
+    "contact": "お問い合わせ"
   },
+  "hero": {
+    "eyebrow": "バックエンド · 機械学習 · モバイル",
+    "headline": "ヌオン・ウテイティチャ",
+    "subtitle": "バックエンド開発者 — 縁の下の力持ち",
+    "cta": "作品を見る ↓",
+    "ctaAlt": "お問い合わせ",
+    "rail": "縁の下 — BENEATH THE FLOOR",
+    "portraitCaption": "プノンペン",
+    "scroll": "SCROLL",
+    "body": "人の目に触れない場所に惹かれます。サービス、スキーマ、パイプライン — ほかのすべてが、その上に立っている。ウェブは Laravel と Nuxt、モバイルは Flutter、必要なときには機械学習。支えるためのコードを。",
+    "portraitAlt": "ヌオン・ウテイティチャ"
+  },
+  "marquee": [
+    "縁の下の力持ち",
+    "BENEATH THE FLOOR",
+    "間 — MA",
+    "土台 — DODAI",
+    "バックエンド開発",
+    "簡素 — KANSO"
+  ],
   "about": {
+    "num": "01",
+    "kanji": "一",
     "title": "わたしについて",
+    "sub": "ABOUT",
     "body1": "プノンペン出身の開発者、ヌオン・ウテイティチャです。カンボジア・デジタル技術アカデミーでコンピュータサイエンス（ソフトウェア工学専攻）を学びながら、Laravel のバックエンド、Nuxt のフロントエンド、Flutter のアプリ、TensorFlow と scikit-learn による機械学習まで、端から端までつくっています。",
     "body2": "InternLink での NLP 文書処理から、量子機械学習の研究、Robocon のロボット開発まで。姿勢はいつも同じです。本質だけが残るまで削ぎ落とし、速く、壊れないものにすること。",
     "quote": "静けさの中に力がある",
-    "quoteTranslation": "静寂は、最大の表現である。"
+    "quoteTranslation": "静寂は、最大の表現である。",
+    "facts": [
+      {
+        "label": "拠点",
+        "value": "カンボジア・プノンペン"
+      },
+      {
+        "label": "在学",
+        "value": "CADT — コンピュータサイエンス／ソフトウェア工学"
+      },
+      {
+        "label": "専門",
+        "value": "バックエンド・機械学習・モバイル"
+      },
+      {
+        "label": "言語",
+        "value": "クメール語 · 英語 · 日本語"
+      }
+    ]
   },
   "work": {
+    "num": "02",
+    "kanji": "二",
     "title": "作品集",
+    "sub": "SELECTED WORK",
     "viewCaseStudy": "詳細を見る →",
     "viewOnGitHub": "GitHubで見る →",
-    "visitSite": "サイトを見る →"
+    "visitSite": "サイトを見る →",
+    "description": "ヌオン・ウテイティチャによるバックエンド・機械学習・モバイルの制作物。各プロジェクトの構成と設計の考えをまとめています。"
+  },
+  "experience": {
+    "num": "03",
+    "kanji": "三",
+    "title": "経歴",
+    "sub": "EXPERIENCE",
+    "items": [
+      {
+        "period": "2026年1月 — 7月",
+        "role": "バックエンド・AI開発インターン",
+        "org": "Scholarar Cambodia",
+        "orgUrl": "https://ai.scholarar.com/auth",
+        "body": "奨学金プラットフォームの AI 側バックエンドを担当。奨学金・応募条件・学生プロフィールの関係をグラフデータベースで表し、その学生が本当に応募できるものを差し出す仕組みをつくりました。あわせて、AI API の利用を利用者とセッション単位で記録する複式の台帳と、エージェントに権限付きで社内データへ触れさせる MCP ツールを実装。",
+        "tags": [
+          "MCP",
+          "Graph Database",
+          "LLM",
+          "REST API",
+          "Double-Entry Ledger"
+        ]
+      },
+      {
+        "period": "2025年10月 — 12月",
+        "role": "機械学習エンジニア",
+        "org": "InternLink",
+        "orgUrl": "https://github.com/InternLink-TheNextStep",
+        "body": "履歴書を文字だけでなくレイアウトごと読み取る CV 解析サービスを開発。LayoutLM のアンサンブルモデルが、候補者を五つの開発・データ職種に分類します。FastAPI と Docker で本番環境へ、すべての推論に確信度を添えて。キャッシュ層を挟み、処理結果の表示にかかる時間を半分にしました。",
+        "tags": [
+          "Python",
+          "FastAPI",
+          "LayoutLM",
+          "PyMuPDF",
+          "Docker"
+        ]
+      },
+      {
+        "period": "2025年10月 — 12月",
+        "role": "量子機械学習リサーチャー",
+        "org": "量子タンパク質折り畳み予測",
+        "body": "量子計算を用いたタンパク質の折り畳み予測モデルを構築し、シミュレータ上の量子デバイスで検証しました。回路のパラメータを調整して安定性と精度を高め、量子と古典のハイブリッド手法を古典的な基準モデルと比べています。",
+        "tags": [
+          "Quantum ML",
+          "Python",
+          "Hybrid Quantum–Classical"
+        ]
+      },
+      {
+        "period": "2025年4月 — 7月",
+        "role": "フルスタック開発インターン",
+        "org": "Ang Seong Language School",
+        "body": "授業のスケジュール管理とレポート生成を支える REST API を設計し、運用しました。学校の日々の業務が、そのエンドポイントの上で動いていました。データ取得をサーバーサイドのキャッシュへ載せ替え、ページの読み込み時間を半分に。",
+        "tags": [
+          "Laravel",
+          "PHP",
+          "REST API",
+          "Caching"
+        ]
+      },
+      {
+        "period": "2024年5月 — 7月",
+        "role": "ロボット開発",
+        "org": "Robocon 2024",
+        "body": "ロボットと制御用コンピュータをつなぐ、リアルタイムで高速な通信の仕組みを担当しました。組込み C/C++ で、センサーの統合と機器の制御をハードウェアのすぐ近くから組み上げています。",
+        "tags": [
+          "C++",
+          "Embedded",
+          "IoT",
+          "Robotics"
+        ]
+      },
+      {
+        "period": "2023年 — 現在",
+        "role": "コンピュータサイエンス学士 — ソフトウェア工学専攻",
+        "org": "カンボジア・デジタル技術アカデミー",
+        "body": "",
+        "tags": []
+      }
+    ]
   },
   "techStack": {
+    "num": "04",
+    "kanji": "四",
     "title": "道具と技",
+    "sub": "TOOLS & CRAFT",
     "categories": {
       "languages": "言語",
       "frameworks": "フレームワーク",
@@ -29,14 +153,41 @@
       "tools": "ツール"
     },
     "items": {
-      "languages": ["PHP", "TypeScript", "Python", "Dart"],
-      "frameworks": ["Laravel", "Nuxt", "Flutter", "Express"],
-      "data": ["PostgreSQL", "MySQL", "Redis", "Firebase"],
-      "tools": ["Git", "Docker", "AWS"]
+      "languages": [
+        "PHP",
+        "TypeScript",
+        "Python",
+        "Dart",
+        "C++",
+        "Java"
+      ],
+      "frameworks": [
+        "Laravel",
+        "Nuxt",
+        "Flutter",
+        "Express",
+        "Svelte"
+      ],
+      "data": [
+        "PostgreSQL",
+        "MySQL",
+        "Redis",
+        "Firebase",
+        "Google Cloud"
+      ],
+      "tools": [
+        "Git",
+        "Docker",
+        "AWS"
+      ]
     }
   },
   "contact": {
+    "num": "05",
+    "kanji": "五",
     "title": "お問い合わせ",
+    "sub": "GET IN TOUCH",
+    "invitation": "インターンシップ・協業のご相談を歓迎します。お気軽にご連絡ください。",
     "email": "uteytithya@gmail.com",
     "github": "GitHub — @Uteytithya",
     "githubUrl": "https://github.com/Uteytithya",
@@ -45,7 +196,112 @@
     "locationLabel": "所在地",
     "location": "カンボジア・プノンペン",
     "farewell": "また逢う日まで",
-    "colophon": "© 2026 ヌオン・ウテイティチャ · Astroで静かに構築"
+    "colophon": "© 2026 ヌオン・ウテイティチャ"
+  },
+  "colophon": {
+    "kanji": "記",
+    "title": "奥付",
+    "sub": "COLOPHON",
+    "intro": "このサイトのつくりについて。書体、色、そして紙の下で動いている仕組み。支える仕事を語るページとしては、ふさわしい場所かもしれません。",
+    "groups": [
+      {
+        "label": "書体",
+        "rows": [
+          {
+            "k": "ディスプレイ",
+            "v": "Zen Old Mincho"
+          },
+          {
+            "k": "本文",
+            "v": "Zen Kaku Gothic New"
+          },
+          {
+            "k": "欧文・和文",
+            "v": "二書体のみ — 欧文と仮名を同じ設計で"
+          }
+        ]
+      },
+      {
+        "label": "色",
+        "rows": [
+          {
+            "k": "和紙",
+            "v": "#F7F3EB"
+          },
+          {
+            "k": "墨",
+            "v": "#2B2928"
+          },
+          {
+            "k": "藍",
+            "v": "#223A5E"
+          },
+          {
+            "k": "朱",
+            "v": "#C73E3A"
+          },
+          {
+            "k": "金",
+            "v": "#C9A96E"
+          }
+        ]
+      },
+      {
+        "label": "構成",
+        "rows": [
+          {
+            "k": "フレームワーク",
+            "v": "Astro 5 — 静的出力"
+          },
+          {
+            "k": "スタイル",
+            "v": "Tailwind CSS とコンポーネント単位のスコープCSS"
+          },
+          {
+            "k": "アイランド",
+            "v": "React — 言語切替のひとつだけ"
+          },
+          {
+            "k": "コンテンツ",
+            "v": "言語ごとの Markdown コレクション"
+          }
+        ]
+      },
+      {
+        "label": "細部",
+        "rows": [
+          {
+            "k": "画面遷移",
+            "v": "Astro の ClientRouter による View Transitions"
+          },
+          {
+            "k": "スクロールの糸",
+            "v": "CSS スクロール駆動アニメーション（非対応環境では JavaScript で代替）"
+          },
+          {
+            "k": "モーション",
+            "v": "prefers-reduced-motion にすべて従います"
+          },
+          {
+            "k": "プライバシー",
+            "v": "アクセス解析なし。Cookie なし。"
+          }
+        ]
+      },
+      {
+        "label": "その他",
+        "rows": [
+          {
+            "k": "ホスティング",
+            "v": "Vercel"
+          },
+          {
+            "k": "指針",
+            "v": "間 · 簡素 · 侘寂"
+          }
+        ]
+      }
+    ]
   },
   "back": "← 戻る"
 }

@@ -4,6 +4,7 @@ category: "Flutterモバイル開発"
 year: "2025年"
 image: "/projects/race-thumb.svg"
 repo: "https://github.com/Uteytithya/race_tracker"
+stack: ["Flutter", "Dart", "Firebase", "Realtime DB"]
 order: 4
 ---
 レースの「いま」を追いかける Flutter 製クロスプラットフォームアプリ。タイムも順位も、Firebase を通じてすべての端末にその瞬間に届きます。
@@ -14,7 +15,7 @@ order: 4
 
 ## アプローチ
 
-Flutter が、ひとつの Dart コードベースから iOS・Android・ウェブ・デスクトップへ画面を届けます。同期は Firebase Realtime Database の役目。ゴール地点で記録されたタイムは、着地した瞬間に他のすべての場所へ現れます。計測のロジックと表示を分けた設計なので、新しいレース形式もUIに触れずに加えられます。
+Flutter を選び、ひとつの Dart コードベースから iOS・Android・ウェブ・デスクトップへ画面を届けました。同期は Firebase Realtime Database の役目。ゴール地点で記録されたタイムは、着地した瞬間に他のすべての場所へ現れます。計測のロジックと表示を分けて設計したので、新しいレース形式もUIに触れずに加えられます。
 
 ## 結果
 
