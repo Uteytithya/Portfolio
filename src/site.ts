@@ -1,7 +1,7 @@
 // Single source of truth for anything that needs an absolute URL or appears in
 // structured data. Change SITE_URL here when the domain is settled — it feeds
 // astro.config.mjs, the sitemap, canonicals, hreflang, and the JSON-LD below.
-export const SITE_URL = 'https://uteytithya.dev';
+export const SITE_URL = 'https://portfolio.tithyautey.workers.dev';
 
 export const PERSON = {
   name: 'Uteytithya Nuon',

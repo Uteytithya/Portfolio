@@ -71,4 +71,5 @@ stale one would point crawlers at a sitemap on a host that no longer exists.
   families cover both languages: each draws its Latin next to its kana.
 - Project thumbnails are placeholder SVGs in `public/projects/` — swap in real
   photography and update the `image` frontmatter in each markdown file.
-- Deploys to Vercel with zero config (static output).
+- Deploys as static output to Cloudflare Workers. Nothing in the build is
+  host-specific — the address lives only in `SITE_URL` (see *Before deploying*).

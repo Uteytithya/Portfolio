@@ -293,7 +293,7 @@
         "rows": [
           {
             "k": "ホスティング",
-            "v": "Vercel"
+            "v": "Cloudflare Workers"
           },
           {
             "k": "指針",
