@@ -35,11 +35,33 @@
     pointer-events: none;
   }
 
-  /* The margin either side of the 1200px content column runs out below this,
-     and the chain would start sitting on top of the text. */
+  /* Below this width the 1200px content column leaves no margin to stand in,
+     so the chain moves behind the content and becomes a watermark instead of
+     a rail. It was simply hidden here before, which meant most visitors never
+     saw it at all.
+
+     Two registers, deliberately: in the margin it is foreground structure and
+     volt, sharp and interactive. Behind the text it is background and cool
+     blue, soft and ambient — so it never reads as something you were supposed
+     to be able to press. It keeps doing one useful thing, which is lighting
+     the vertex you are currently on. */
   @media (max-width: 1239px) {
     .backbone {
-      display: none;
+      left: 50%;
+      top: 50%;
+      /* Scaling the whole element keeps the SVG and the absolutely positioned
+         vertices in step; scaling only the SVG would leave the diamonds
+         behind at their original coordinates. */
+      transform: translate(-50%, -50%) scale(2.4);
+      /* Behind main/nav/footer, which sit at z-index 1, but above the grid. */
+      z-index: 0;
+      /* 0.13, not something more visible. Composited over the ground this
+         puts the worst case — a glyph sitting directly on a lit bond — at
+         4.66:1 for the faintest ink tier. At 0.26 that tier measured 3.31:1
+         and failed. The chain stays readable as a shape by being thicker
+         rather than more opaque, which costs no contrast. */
+      opacity: 0.13;
+      filter: blur(0.4px);
     }
   }
 
@@ -153,6 +175,41 @@
     .backbone-list :global(a)::before,
     .backbone-list :global(.backbone-label) {
       transition: none;
+    }
+  }
+
+  /* Watermark colours. These have to come after the base .bond and vertex
+     rules they override — at equal specificity the later declaration wins,
+     and sitting above them in the file is why the chain stayed volt. */
+  @media (max-width: 1239px) {
+    .backbone :global(.bond),
+    .backbone :global(.bond--done) {
+      stroke: var(--signal);
+      stroke-width: 2.5;
+      opacity: 1;
+    }
+
+    .backbone-list :global(a)::before,
+    .backbone-list :global(a[data-state='passed'])::before {
+      border-color: var(--signal);
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    .backbone-list :global(a)::before,
+    .backbone-list :global(a[data-state='passed'])::before,
+    .backbone-list :global(a[data-state='here'])::before {
+      border-width: 2.5px;
+    }
+
+    .backbone-list :global(a[data-state='here'])::before {
+      border-color: var(--signal);
+      background-color: var(--signal);
+    }
+
+    /* Labels belong to the interactive version only. */
+    .backbone-list :global(.backbone-label) {
+      display: none;
     }
   }
 </style>
@@ -272,6 +329,22 @@
       pick();
       root.dataset.raf = String(requestAnimationFrame(loop));
     };
+
+    // Below the breakpoint the chain sits behind the content, where its links
+    // cannot be tapped. A link you cannot reach should not be a keyboard stop
+    // or something a screen reader offers, so the whole nav steps aside and
+    // the header nav remains the navigation.
+    const decorative = window.matchMedia('(max-width: 1239px)');
+    const applyRole = () => {
+      const off = decorative.matches;
+      root.setAttribute('aria-hidden', String(off));
+      anchors.forEach((a) => {
+        if (off) a.setAttribute('tabindex', '-1');
+        else a.removeAttribute('tabindex');
+      });
+    };
+    applyRole();
+    decorative.addEventListener('change', applyRole);
 
     root.hidden = false;
     pick();
