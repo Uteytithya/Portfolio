@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
-  <rect width="1200" height="900" fill="#EFE9DD"/>
+  <rect width="1200" height="900" fill="#111419"/>
   <!-- the newspaper -->
-  <rect x="360" y="220" width="380" height="440" rx="4" fill="#FBF8F1" stroke="#6B6560" stroke-width="4" opacity="0.9"/>
-  <rect x="400" y="270" width="300" height="18" rx="9" fill="#2B2928" opacity="0.75"/>
-  <rect x="400" y="330" width="140" height="90" fill="#6B6560" opacity="0.25"/>
-  <rect x="560" y="330" width="140" height="8" rx="4" fill="#6B6560" opacity="0.4"/>
-  <rect x="560" y="356" width="140" height="8" rx="4" fill="#6B6560" opacity="0.4"/>
-  <rect x="560" y="382" width="110" height="8" rx="4" fill="#6B6560" opacity="0.4"/>
-  <rect x="400" y="450" width="300" height="8" rx="4" fill="#6B6560" opacity="0.35"/>
-  <rect x="400" y="476" width="300" height="8" rx="4" fill="#6B6560" opacity="0.35"/>
-  <rect x="400" y="502" width="260" height="8" rx="4" fill="#6B6560" opacity="0.35"/>
+  <rect x="360" y="220" width="380" height="440" fill="#1d2127" stroke="#a8b0b8" stroke-width="4" opacity="0.9"/>
+  <rect x="400" y="270" width="300" height="18" fill="#a8b0b8" opacity="0.75"/>
+  <rect x="400" y="330" width="140" height="90" fill="#a8b0b8" opacity="0.25"/>
+  <rect x="560" y="330" width="140" height="8" fill="#a8b0b8" opacity="0.4"/>
+  <rect x="560" y="356" width="140" height="8" fill="#a8b0b8" opacity="0.4"/>
+  <rect x="560" y="382" width="110" height="8" fill="#a8b0b8" opacity="0.4"/>
+  <rect x="400" y="450" width="300" height="8" fill="#a8b0b8" opacity="0.35"/>
+  <rect x="400" y="476" width="300" height="8" fill="#a8b0b8" opacity="0.35"/>
+  <rect x="400" y="502" width="260" height="8" fill="#a8b0b8" opacity="0.35"/>
   <!-- the lens that doubts -->
-  <circle cx="760" cy="520" r="120" fill="none" stroke="#223A5E" stroke-width="14" opacity="0.85"/>
-  <path d="M845 605 L 950 710" stroke="#223A5E" stroke-width="20" stroke-linecap="round" opacity="0.85"/>
-  <path d="M715 480 l 90 80 M805 480 l -90 80" stroke="#C9A96E" stroke-width="10" stroke-linecap="round"/>
-  <text x="130" y="810" font-family="serif" font-size="120" fill="rgba(0,0,0,0.08)">真</text>
+  <circle cx="760" cy="520" r="120" fill="none" stroke="#4dd8e8" stroke-width="14" opacity="0.85"/>
+  <path d="M845 605 L 950 710" stroke="#4dd8e8" stroke-width="20" stroke-linecap="round" opacity="0.85"/>
+  <path d="M715 480 l 90 80 M805 480 l -90 80" stroke="#e8dc55" stroke-width="10" stroke-linecap="round"/>
+  <text x="130" y="810" font-family="serif" font-size="120" fill="rgba(230,232,234,0.07)">真</text>
 </svg>

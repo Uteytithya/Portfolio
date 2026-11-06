@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Head from './Head.astro';
 import PaperGrain from './PaperGrain.astro';
+import Backbone from './Backbone.astro';
 import '../styles/global.css';
 
 const {
@@ -16,23 +17,28 @@ const {
 // speaks the page's own language rather than defaulting to English.
 const skip = skipLabel ?? (locale === 'ja' ? '本文へスキップ' : 'Skip to content');
 
-// Two families carry the entire bilingual site: Zen Old Mincho for display and
-// Zen Kaku Gothic New for body and labels. Both draw their Latin alongside their
-// kana, so English and Japanese share one skeleton.
+// One family now carries the entire bilingual site: Zen Kaku Gothic New, for
+// display, body and labels alike. It draws its Latin alongside its kana, so
+// English and Japanese share one skeleton.
+//
+// Zen Old Mincho is gone. A brush serif has no place on an industrial surface,
+// and because nothing references it any more its three weights are never
+// fetched — an unused @font-face is not downloaded. That is ~175 KB saved
+// without touching the subsetting pipeline.
 //
 // Self-hosted, subset by scripts/build-fonts.py. Served from Google these are
 // CJK fonts split into ~120 unicode-range slices, and the ~55 Japanese
 // characters on the English page alone dragged in 1.35 MB across 118 requests.
-// The subsets are 5 files totalling ~330 KB, with no third-party connection.
 //
-// The two faces below carry first paint (body text and the h1); the rest load
-// from fonts.css without blocking. `crossorigin` is required on font preloads
-// even same-origin, or the browser fetches the file twice.
+// Both weights below carry first paint: 400 for body, 500 for every heading.
+// `crossorigin` is required on font preloads even same-origin, or the browser
+// fetches the file twice.
 const PRELOAD = [
+  // The h1 is the LCP element on most pages and it is set in Oxanium, so the
+  // variable file leads. 12 KB for the whole weight axis.
+  '/fonts/oxanium-var.woff2',
   '/fonts/zen-kaku-gothic-new-400.woff2',
-  locale === 'ja'
-    ? '/fonts/zen-old-mincho-500.woff2'
-    : '/fonts/zen-old-mincho-600.woff2'
+  '/fonts/zen-kaku-gothic-new-500.woff2'
 ];
 ---
 
@@ -72,7 +78,7 @@ const PRELOAD = [
   <body>
     <PaperGrain />
     <a href="#main" class="skip-link">{skip}</a>
-    <span class="scroll-thread" aria-hidden="true"></span>
+    <Backbone />
     <slot name="nav" />
     <main id="main" class="mx-auto w-full max-w-site px-6 md:px-16">
       <slot />
@@ -105,36 +111,8 @@ const PRELOAD = [
         els.forEach((el) => io.observe(el));
       }
 
-      // The thread down the left margin is driven by a scroll-linked animation
-      // where that exists (Chromium). Safari and Firefox get the same effect
-      // from a rAF-throttled scroll listener instead of nothing at all.
-      function threadFallback() {
-        const thread = document.querySelector<HTMLElement>('.scroll-thread');
-        if (!thread) return;
-        if (CSS.supports('animation-timeline: scroll(root block)')) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-        thread.classList.add('scroll-thread--js');
-        let ticking = false;
-        const paint = () => {
-          const max = document.documentElement.scrollHeight - window.innerHeight;
-          const progress = max > 0 ? window.scrollY / max : 0;
-          thread.style.transform = `scaleY(${Math.min(1, Math.max(0, progress))})`;
-          ticking = false;
-        };
-        const onScroll = () => {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(paint);
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onScroll, { passive: true });
-        paint();
-      }
-
       function init() {
         observeReveals();
-        threadFallback();
       }
 
       init();

@@ -16,14 +16,14 @@ export default defineConfig({
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', ja: 'ja' } },
       // `/` is a client-side redirect shim, 404 is not a real page, and
-      // /font-lab is a throwaway type specimen (delete both when the display
-      // face is settled).
+      // /type-lab is a throwaway display-face specimen (delete it and this
+      // line once the face is chosen).
       filter: (page) => {
         const path = new URL(page).pathname;
         return (
           path !== '/' &&
           !path.startsWith('/404') &&
-          !path.startsWith('/font-lab')
+          !path.startsWith('/type-lab')
         );
       }
     })

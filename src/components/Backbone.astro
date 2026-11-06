@@ -1,0 +1,358 @@
+---
+/**
+ * Backbone — the page's sections drawn as a skeletal chain in the left margin.
+ *
+ * Replaces the plain scroll-thread. Vertices are sections, bonds connect them,
+ * the filled vertex is where you are, and the bonds behind you are lit.
+ *
+ * GEOMETRY. A skeletal chain reads as one because of its ~120° bond angle. For
+ * a zig-zag with horizontal step hx and vertical step dy, the interior angle is
+ * acos((hx² − dy²)/(hx² + dy²)), which is 120° exactly when dy = hx·√3. With
+ * hx = 28 that puts dy at 48. Those numbers are why this is a compact diagram
+ * and not a full-height rail: stretching the same chain over a 9,000px page
+ * would need a vertical step of thousands of pixels per bond, and what you'd
+ * actually draw is a straight line with dots on it.
+ *
+ * It is an enhancement, not the navigation — the header nav is. So it is built
+ * at runtime from whatever sections the page actually has, and simply does not
+ * appear without JavaScript.
+ */
+---
+
+<nav class="backbone" aria-label="Section map" data-backbone hidden>
+  <svg class="backbone-svg" aria-hidden="true"></svg>
+  <ul class="backbone-list"></ul>
+</nav>
+
+<style>
+  .backbone {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 72px;
+    z-index: 45;
+    pointer-events: none;
+  }
+
+  /* Below this width the 1200px content column leaves no margin to stand in,
+     so the chain moves behind the content and becomes a watermark instead of
+     a rail. It was simply hidden here before, which meant most visitors never
+     saw it at all.
+
+     Two registers, deliberately: in the margin it is foreground structure and
+     volt, sharp and interactive. Behind the text it is background and cool
+     blue, soft and ambient — so it never reads as something you were supposed
+     to be able to press. It keeps doing one useful thing, which is lighting
+     the vertex you are currently on. */
+  @media (max-width: 1239px) {
+    .backbone {
+      left: 50%;
+      top: 50%;
+      /* Scaling the whole element keeps the SVG and the absolutely positioned
+         vertices in step; scaling only the SVG would leave the diamonds
+         behind at their original coordinates. */
+      transform: translate(-50%, -50%) scale(2.4);
+      /* Behind main/nav/footer, which sit at z-index 1, but above the grid. */
+      z-index: 0;
+      /* 0.22. The ceiling is set by the text that is NOT on a plate — the
+         hero copy, the section numerals, the marquee. At 0.22 every --ash
+         text clears 4.5:1 bare (5.47:1) so the type hierarchy is untouched,
+         and only --ash-faint needs a backing. 0.30 looked better but put bare
+         --ash at 4.35:1, and fixing that meant brightening half the page to
+         bone, which collapses two ink tiers into one. The frosted plates on
+         the content blocks then give headroom on top of this. */
+      opacity: 0.22;
+      filter: blur(0.4px);
+    }
+  }
+
+  .backbone-svg {
+    display: block;
+    width: 72px;
+    overflow: visible;
+  }
+
+  .backbone :global(.bond) {
+    stroke: var(--edge-strong);
+    stroke-width: 1.5;
+    fill: none;
+    transition: stroke 300ms ease;
+  }
+
+  /* Bonds behind you are made. */
+  .backbone :global(.bond--done) {
+    stroke: var(--volt);
+    opacity: 0.55;
+  }
+
+  /* The branch: Work is the one section that genuinely leads somewhere else. */
+  .backbone :global(.bond--branch) {
+    stroke: var(--edge-strong);
+    stroke-dasharray: 3 3;
+  }
+
+  .backbone-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .backbone-list :global(a) {
+    position: absolute;
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    pointer-events: auto;
+    text-decoration: none;
+    /* The hit area is 22px; the drawn diamond is 7px inside it. */
+  }
+
+  .backbone-list :global(a)::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border: 1.5px solid var(--edge-strong);
+    background-color: var(--void);
+    transform: rotate(45deg);
+    transition:
+      border-color 260ms ease,
+      background-color 260ms ease;
+  }
+
+  /* Passed: outlined in volt but not filled. */
+  .backbone-list :global(a[data-state='passed'])::before {
+    border-color: var(--volt);
+    opacity: 0.6;
+  }
+
+  /* Here: filled. */
+  .backbone-list :global(a[data-state='here'])::before {
+    border-color: var(--volt);
+    background-color: var(--volt);
+  }
+
+  .backbone-list :global(a:hover)::before,
+  .backbone-list :global(a:focus-visible)::before {
+    border-color: var(--volt);
+  }
+
+  /* The label is transient, so it is allowed to overhang the rail — at rest
+     nothing but the chain occupies the margin. */
+  .backbone-list :global(.backbone-label) {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--volt);
+    background-color: var(--void);
+    padding: 3px 7px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  :global(html[lang='ja']) .backbone-list :global(.backbone-label) {
+    text-transform: none;
+    letter-spacing: 0.06em;
+  }
+
+  .backbone-list :global(a:hover) .backbone-label,
+  .backbone-list :global(a:focus-visible) .backbone-label,
+  .backbone-list :global(a[data-state='here']) .backbone-label {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .backbone :global(.bond),
+    .backbone-list :global(a)::before,
+    .backbone-list :global(.backbone-label) {
+      transition: none;
+    }
+  }
+
+  /* Watermark colours. These have to come after the base .bond and vertex
+     rules they override — at equal specificity the later declaration wins,
+     and sitting above them in the file is why the chain stayed volt. */
+  @media (max-width: 1239px) {
+    .backbone :global(.bond),
+    .backbone :global(.bond--done) {
+      stroke: var(--signal);
+      stroke-width: 2.5;
+      opacity: 1;
+    }
+
+    .backbone-list :global(a)::before,
+    .backbone-list :global(a[data-state='passed'])::before {
+      border-color: var(--signal);
+      background-color: transparent;
+      opacity: 1;
+    }
+
+    .backbone-list :global(a)::before,
+    .backbone-list :global(a[data-state='passed'])::before,
+    .backbone-list :global(a[data-state='here'])::before {
+      border-width: 2.5px;
+    }
+
+    .backbone-list :global(a[data-state='here'])::before {
+      border-color: var(--signal);
+      background-color: var(--signal);
+    }
+
+    /* Labels belong to the interactive version only. */
+    .backbone-list :global(.backbone-label) {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function backbone() {
+    const root = document.querySelector<HTMLElement>('[data-backbone]');
+    if (!root) return;
+
+    const svg = root.querySelector('svg')!;
+    const list = root.querySelector('ul')!;
+
+    // astro:page-load fires on the first load as well as on every client-side
+    // navigation, so this runs twice unless it cleans up after itself — which
+    // built the chain twice over and left two rAF loops racing each other.
+    const prev = Number(root.dataset.raf || 0);
+    if (prev) cancelAnimationFrame(prev);
+    svg.replaceChildren();
+    list.replaceChildren();
+
+    // Whatever this page actually has, in document order.
+    const sections = [
+      ...document.querySelectorAll<HTMLElement>('main section[id], footer[id]')
+    ];
+    if (sections.length < 2) return;
+
+    const HX = 28; // horizontal step
+    const DY = 48; // vertical step — HX * sqrt(3), giving a 120° bond angle
+    const X0 = 22;
+    const PAD = 14;
+
+    const pt = (i: number) => ({
+      x: X0 + (i % 2 ? HX : 0),
+      y: PAD + i * DY
+    });
+
+    const h = PAD * 2 + (sections.length - 1) * DY;
+    svg.setAttribute('viewBox', `0 0 72 ${h}`);
+    svg.setAttribute('height', String(h));
+    root.style.height = `${h}px`;
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const bonds: SVGLineElement[] = [];
+
+    for (let i = 0; i < sections.length - 1; i++) {
+      const a = pt(i);
+      const b = pt(i + 1);
+      const line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', String(a.x));
+      line.setAttribute('y1', String(a.y));
+      line.setAttribute('x2', String(b.x));
+      line.setAttribute('y2', String(b.y));
+      line.setAttribute('class', 'bond');
+      svg.appendChild(line);
+      bonds.push(line);
+    }
+
+    const anchors: HTMLAnchorElement[] = sections.map((sec, i) => {
+      const p = pt(i);
+      const heading = sec.querySelector('h1, h2');
+      const label = (heading?.textContent || sec.id).trim();
+
+      // Work branches to the project pages, and it is the only one that does.
+      if (sec.id === 'work') {
+        const stub = document.createElementNS(ns, 'line');
+        const dir = i % 2 ? 1 : -1;
+        stub.setAttribute('x1', String(p.x));
+        stub.setAttribute('y1', String(p.y));
+        stub.setAttribute('x2', String(p.x + 24 * dir));
+        stub.setAttribute('y2', String(p.y + 14));
+        stub.setAttribute('class', 'bond bond--branch');
+        svg.appendChild(stub);
+      }
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${sec.id}`;
+      a.style.left = `${p.x}px`;
+      a.style.top = `${p.y}px`;
+      a.setAttribute('aria-label', label);
+      const span = document.createElement('span');
+      span.className = 'backbone-label';
+      span.textContent = label;
+      span.setAttribute('aria-hidden', 'true');
+      a.appendChild(span);
+      li.appendChild(a);
+      list.appendChild(li);
+      return a;
+    });
+
+    const setActive = (idx: number) => {
+      anchors.forEach((a, i) => {
+        a.dataset.state = i < idx ? 'passed' : i === idx ? 'here' : 'ahead';
+      });
+      bonds.forEach((b, i) => b.classList.toggle('bond--done', i < idx));
+    };
+
+    // The active section is the last one whose top has passed the upper third
+    // of the viewport — the same rule a reader uses.
+    let active = -1;
+    const pick = () => {
+      const line = window.innerHeight * 0.34;
+      let idx = 0;
+      sections.forEach((s, i) => {
+        if (s.getBoundingClientRect().top <= line) idx = i;
+      });
+      if (idx !== active) {
+        active = idx;
+        setActive(idx);
+      }
+    };
+
+    // One rect read per section per frame, and it only writes when the active
+    // section actually changes. A scroll listener would miss scrolls that do
+    // not originate from the window.
+    const loop = () => {
+      pick();
+      root.dataset.raf = String(requestAnimationFrame(loop));
+    };
+
+    // Below the breakpoint the chain sits behind the content, where its links
+    // cannot be tapped. A link you cannot reach should not be a keyboard stop
+    // or something a screen reader offers, so the whole nav steps aside and
+    // the header nav remains the navigation.
+    const decorative = window.matchMedia('(max-width: 1239px)');
+    const applyRole = () => {
+      const off = decorative.matches;
+      root.setAttribute('aria-hidden', String(off));
+      anchors.forEach((a) => {
+        if (off) a.setAttribute('tabindex', '-1');
+        else a.removeAttribute('tabindex');
+      });
+    };
+    applyRole();
+    decorative.addEventListener('change', applyRole);
+
+    root.hidden = false;
+    pick();
+    loop();
+  }
+
+  backbone();
+  document.addEventListener('astro:page-load', backbone);
+</script>

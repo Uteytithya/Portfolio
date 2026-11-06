@@ -14,8 +14,8 @@ const { t } = Astro.props;
   />
 
   <div class="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)]">
-    <div class="reveal">
-      <div class="space-y-6 text-stone">
+    <div class="about-prose reveal">
+      <div class="space-y-6 text-ash">
         <p class="about-lead">{t.about.body1}</p>
         <p>{t.about.body2}</p>
       </div>
@@ -48,7 +48,7 @@ const { t } = Astro.props;
   .about-lead {
     font-size: 20px;
     line-height: 1.75;
-    color: var(--sumi-ink);
+    color: var(--bone);
   }
 
   html[lang='ja'] .about-lead {
@@ -56,12 +56,12 @@ const { t } = Astro.props;
   }
 
   .about-quote {
-    font-family: 'Zen Old Mincho', serif;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 500;
     font-size: 25px;
-    color: var(--stone);
+    color: var(--ash);
     letter-spacing: 0.12em;
-    border-left: 2px solid var(--gold);
+    border-left: 2px solid var(--volt);
     padding-left: 20px;
   }
 
@@ -69,7 +69,7 @@ const { t } = Astro.props;
     font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 400;
     font-size: 15px;
-    color: var(--stone);
+    color: var(--ash);
     opacity: 0.85;
     padding-left: 22px;
   }
@@ -83,11 +83,11 @@ const { t } = Astro.props;
     grid-template-columns: 108px 1fr;
     gap: 20px;
     padding: 16px 0;
-    border-bottom: 1px solid var(--paper-edge);
+    border-bottom: 1px solid var(--edge);
   }
 
   .fact-row:first-child {
-    border-top: 1px solid var(--paper-edge);
+    border-top: 1px solid var(--edge);
   }
 
   .fact-label {
@@ -95,7 +95,7 @@ const { t } = Astro.props;
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--stone);
+    color: var(--ash);
     opacity: 0.65;
     padding-top: 3px;
   }
@@ -106,6 +106,24 @@ const { t } = Astro.props;
 
   .fact-value {
     font-size: 16px;
-    color: var(--sumi-ink);
+    color: var(--bone);
+  }
+
+  /* Frosted plates. Both of these are bare small text, which over the
+     watermark measures 2.95:1 — well under the floor. On a plate it is
+     4.66:1. See Backbone.astro for where those numbers come from. */
+  @media (max-width: 1239px) {
+    .about-prose,
+    .about-facts {
+      background-color: rgba(21, 24, 28, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 24px 20px;
+      clip-path: var(--clip-chamfer);
+    }
+
+    .fact-row:first-child {
+      border-top: none;
+    }
   }
 </style>

@@ -21,8 +21,10 @@ export default function LanguageSwitcher({ locale, path }) {
     fontSize: '13px',
     fontWeight: 500,
     letterSpacing: '0.04em',
-    color: active ? '#223A5E' : '#6B6560',
-    borderBottom: active ? '1px solid #223A5E' : '1px solid transparent',
+    color: active ? 'var(--volt)' : 'var(--ash)',
+    borderBottom: active
+      ? '1px solid var(--volt)'
+      : '1px solid transparent',
     paddingBottom: '1px',
     textDecoration: 'none',
     transition: 'color 300ms ease'

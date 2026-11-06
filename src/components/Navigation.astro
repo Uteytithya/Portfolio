@@ -68,8 +68,8 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
 
 <style>
   .site-nav {
-    /* Transparent over washi at rest — only a breath of a border below. */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    /* Transparent over void at rest — only a breath of a border below. */
+    border-bottom: 1px solid transparent;
     background-color: transparent;
     transition: background-color 400ms ease, border-color 400ms ease,
       box-shadow 400ms ease;
@@ -78,28 +78,28 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
   /* Once the page has moved, the bar earns a surface — otherwise project images
      and the dark tech plate slide underneath the links and swallow them. */
   .site-nav--scrolled {
-    background-color: rgba(247, 243, 235, 0.82);
-    backdrop-filter: saturate(140%) blur(10px);
-    -webkit-backdrop-filter: saturate(140%) blur(10px);
-    border-bottom-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 1px 12px rgba(43, 41, 40, 0.04);
+    background-color: rgba(11, 12, 14, 0.78);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border-bottom-color: var(--edge-strong);
+    box-shadow: 0 1px 0 0 rgba(232, 220, 85, 0.12);
   }
 
   /* Without backdrop-filter the translucency would let text collide with what
      is behind it, so those browsers get an opaque bar instead. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .site-nav--scrolled {
-      background-color: var(--washi);
+      background-color: var(--void);
     }
   }
 
   #mobile-menu {
-    background-color: var(--washi);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: var(--steel);
+    border-bottom: 1px solid var(--edge-strong);
   }
 
   .nav-link {
-    color: var(--sumi-ink);
+    color: var(--bone);
     text-decoration: none;
     padding-bottom: 2px;
     border-bottom: 1px solid transparent;
@@ -107,11 +107,14 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
   }
 
   .nav-link:hover {
-    color: var(--indigo);
+    color: var(--volt);
   }
 
+  /* Active is volt, like every other "this one is live" state on the site.
+     It was alert red, which on an industrial surface reads as a fault. */
   .nav-link--active {
-    border-bottom-color: var(--vermilion);
+    color: var(--volt);
+    border-bottom-color: var(--volt);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -121,10 +124,10 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
   }
 
   .nav-hamburger {
-    font-family: 'Zen Old Mincho', serif;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
     font-size: 18px;
     line-height: 1;
-    color: var(--sumi-ink);
+    color: var(--bone);
     /* The glyph stays small; the tap area does not. 44px is the floor for a
        comfortable touch target. */
     display: inline-flex;

@@ -209,7 +209,7 @@
         "rows": [
           {
             "k": "Display",
-            "v": "Zen Old Mincho"
+            "v": "Oxanium"
           },
           {
             "k": "Text",
@@ -217,7 +217,7 @@
           },
           {
             "k": "Both languages",
-            "v": "Two families — Latin and kana drawn together"
+            "v": "Two families — Oxanium sets Latin, Zen Kaku the kana"
           }
         ]
       },
@@ -225,24 +225,24 @@
         "label": "Palette",
         "rows": [
           {
-            "k": "Washi paper",
-            "v": "#F7F3EB"
+            "k": "Void",
+            "v": "#0B0C0E"
           },
           {
-            "k": "Sumi ink",
-            "v": "#2B2928"
+            "k": "Steel",
+            "v": "#15181C"
           },
           {
-            "k": "Indigo",
-            "v": "#223A5E"
+            "k": "Bone",
+            "v": "#E6E8EA"
           },
           {
-            "k": "Vermilion",
-            "v": "#C73E3A"
+            "k": "Volt",
+            "v": "#E8DC55"
           },
           {
-            "k": "Gold",
-            "v": "#C9A96E"
+            "k": "Signal",
+            "v": "#4DD8E8"
           }
         ]
       },

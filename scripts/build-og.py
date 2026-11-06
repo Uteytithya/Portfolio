@@ -26,12 +26,15 @@ MINCHO_400 = "zenoldmincho/ZenOldMincho-Regular.ttf"
 KAKU_400 = "zenkakugothicnew/ZenKakuGothicNew-Regular.ttf"
 KAKU_500 = "zenkakugothicnew/ZenKakuGothicNew-Medium.ttf"
 
-WASHI = "#F7F3EB"
-INK = "#2B2928"
-STONE = "#57524c"
-VERMILION = "#C73E3A"
-GOLD = "#C9A96E"
-INDIGO = "#223A5E"
+# The card speaks the same language as the site it links to. A social preview
+# showing a design the site no longer has is worse than no preview at all.
+VOID = "#0B0C0E"
+STEEL = "#15181C"
+BONE = "#E6E8EA"
+ASH = "#A6ADB5"
+EDGE = "#2A2E34"
+VOLT = "#E8DC55"
+SIGNAL = "#4DD8E8"
 
 _fonts = {}
 
@@ -100,47 +103,54 @@ def main():
     W, H = 1200, 630
     body = []
 
-    body.append(f'<rect width="{W}" height="{H}" fill="{WASHI}"/>')
+    body.append(f'<rect width="{W}" height="{H}" fill="{VOID}"/>')
 
-    # Ghost kanji, held inside the frame so a thumbnail crop never cuts it.
-    ghost, _ = text_path(MINCHO_400, "創", 360, 948, 452, anchor="middle")
-    body.append(f'<g fill="{INK}" fill-opacity="0.045">{ghost}</g>')
+    # The engineering grid, as on the page itself.
+    for gx in range(96, W, 96):
+        body.append(f'<rect x="{gx}" y="0" width="1" height="{H}" fill="{EDGE}" fill-opacity="0.5"/>')
+    for gy in range(96, H, 96):
+        body.append(f'<rect x="0" y="{gy}" width="{W}" height="1" fill="{EDGE}" fill-opacity="0.5"/>')
 
+    # Hairline frame, with brackets on two corners.
     body.append(
         f'<rect x="48" y="48" width="{W-96}" height="{H-96}" fill="none" '
-        f'stroke="{GOLD}" stroke-width="1" stroke-opacity="0.55"/>'
+        f'stroke="{EDGE}" stroke-width="1"/>'
     )
-
-    eyebrow, _ = text_path(KAKU_500, "BACKEND · ML · MOBILE", 21, 104, 196, tracking=0.3)
-    body.append(f'<g fill="{VERMILION}">{eyebrow}</g>')
-
-    name, _ = text_path(MINCHO_600, "Uteytithya Nuon", 82, 104, 292)
-    body.append(f'<g fill="{INK}">{name}</g>')
-
-    # The brush stroke that sits under the name in the hero.
     body.append(
-        '<path d="M104 322C154 313 222 309 300 311c72 2 143 7 215 3 34-2 59-4 81-6" '
-        f'stroke="{INDIGO}" stroke-opacity="0.45" stroke-width="6" '
-        'stroke-linecap="round" fill="none"/>'
+        f'<g stroke="{VOLT}" stroke-width="3" fill="none">'
+        '<path d="M64 100 V64 H100"/>'
+        f'<path d="M{W-64} {H-100} V{H-64} H{W-100}"/>'
+        "</g>"
     )
+
+    # Eyebrow, with the diamond marker the hero uses.
+    body.append(f'<rect x="104" y="150" width="9" height="9" fill="{VOLT}" transform="rotate(45 108.5 154.5)"/>')
+    eyebrow, _ = text_path(KAKU_400, "BACKEND / ML / MOBILE", 19, 132, 161, tracking=0.22)
+    body.append(f'<g fill="{VOLT}">{eyebrow}</g>')
+
+    # The name, in caps on two lines.
+    for i, line in enumerate(("UTEYTITHYA", "NUON")):
+        nm, _ = text_path(KAKU_500, line, 86, 104, 262 + i * 92)
+        body.append(f'<g fill="{BONE}">{nm}</g>')
+
+    # Registration rule: a measured line with a marked origin.
+    body.append(f'<rect x="104" y="394" width="52" height="3" fill="{VOLT}"/>')
+    body.append(f'<rect x="156" y="395" width="300" height="1" fill="{EDGE}"/>')
 
     sub, _ = text_path(
-        KAKU_400, "Backend Developer — the strength beneath the floor", 29, 104, 382
+        KAKU_400, "Backend developer — the strength beneath the floor", 25, 104, 452
     )
-    body.append(f'<g fill="{STONE}">{sub}</g>')
+    body.append(f'<g fill="{ASH}">{sub}</g>')
 
-    body.append(f'<rect x="104" y="436" width="52" height="1" fill="{GOLD}"/>')
+    loc, _ = text_path(KAKU_400, "Phnom Penh", 17, 104, 500, tracking=0.14)
+    body.append(f'<g fill="{SIGNAL}">{loc}</g>')
 
-    phrase, _ = text_path(MINCHO_400, "縁の下の力持ち", 26, 104, 492, tracking=0.22)
-    body.append(f'<g fill="{STONE}" fill-opacity="0.85">{phrase}</g>')
-
-    # Hanko, pressed off-square in the lower right.
-    seal, _ = text_path(MINCHO_600, "技", 48, 47, 66, anchor="middle")
+    # Unit stamp, chamfered like every plate on the site.
+    seal, _ = text_path(KAKU_500, "技", 46, 47, 64, anchor="middle")
     body.append(
-        '<g transform="translate(1012 432) rotate(-4)">'
-        f'<rect x="0" y="0" width="94" height="94" rx="4" fill="none" '
-        f'stroke="{VERMILION}" stroke-width="3" stroke-opacity="0.9"/>'
-        f'<g fill="{VERMILION}" fill-opacity="0.9">{seal}</g>'
+        '<g transform="translate(1000 428)">'
+        f'<path d="M0 0 H80 L94 14 V94 H14 L0 80 Z" fill="{STEEL}" stroke="{VOLT}" stroke-width="2"/>'
+        f'<g fill="{VOLT}">{seal}</g>'
         "</g>"
     )
 

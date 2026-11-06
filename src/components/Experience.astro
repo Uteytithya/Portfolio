@@ -55,7 +55,7 @@ const { t } = Astro.props;
     position: relative;
     margin-top: 56px;
     padding-left: 30px;
-    border-left: 1px solid var(--paper-edge);
+    border-left: 1px solid var(--edge);
     list-style: none;
   }
 
@@ -68,29 +68,30 @@ const { t } = Astro.props;
     padding-bottom: 0;
   }
 
-  /* Knot on the thread — centred over the 1px rule. */
+  /* Station marker on the rail: a diamond, hollow until it is the live one.
+     Nothing in this system is round. */
   .entry-node {
     position: absolute;
     left: -35px;
-    top: 6px;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background-color: var(--washi);
-    border: 1px solid var(--gold);
+    top: 7px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--void);
+    border: 1.5px solid var(--volt);
+    transform: rotate(45deg);
   }
 
-  /* The most recent post sits in vermilion; the rest recede. */
+  /* The current post is the filled marker. It used to be alert red, which on
+     an industrial surface reads as a fault rather than as "you are here". */
   .timeline-entry:first-child .entry-node {
-    background-color: var(--vermilion);
-    border-color: var(--vermilion);
+    background-color: var(--volt);
   }
 
   .entry-period {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    color: var(--stone);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    color: var(--ash);
     opacity: 0.7;
   }
 
@@ -101,7 +102,7 @@ const { t } = Astro.props;
   .entry-role {
     font-size: 25px;
     line-height: 1.25;
-    color: var(--sumi-ink);
+    color: var(--bone);
   }
 
   html[lang='ja'] .entry-role {
@@ -113,7 +114,7 @@ const { t } = Astro.props;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.06em;
-    color: var(--indigo);
+    color: var(--signal);
   }
 
   .entry-org a {
@@ -124,12 +125,12 @@ const { t } = Astro.props;
   }
 
   .entry-org a:hover {
-    border-bottom-color: var(--indigo);
+    border-bottom-color: var(--signal);
   }
 
   .entry-body {
     max-width: 62ch;
-    color: var(--stone);
+    color: var(--ash);
   }
 
   .entry-tags {
@@ -140,14 +141,13 @@ const { t } = Astro.props;
   }
 
   .entry-chip {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--stone);
-    border: 1px solid var(--paper-edge);
-    border-radius: 2px;
-    padding: 4px 10px;
-    background-color: var(--washi-warm);
+    letter-spacing: 0.04em;
+    color: var(--ash);
+    border-left: 2px solid var(--edge-strong);
+    padding: 5px 10px;
+    background-color: var(--steel-deep);
   }
 
   @media (max-width: 767px) {
@@ -157,6 +157,21 @@ const { t } = Astro.props;
 
     .entry-node {
       left: -27px;
+    }
+  }
+
+  /* Frosted plate. The watermark shows through, but the panel lifts the
+     background enough that small text clears 4.5:1 over it — measured at
+     4.66:1 for the faintest ink tier. Bare small text over the watermark is
+     2.95:1, which is why every block of it gets one of these. */
+  @media (max-width: 1239px) {
+    /* The timeline is bare prose, so it needs a plate of its own. */
+    .timeline {
+      background-color: rgba(21, 24, 28, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 26px 20px 26px 30px;
+      clip-path: var(--clip-chamfer);
     }
   }
 </style>

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
-  <rect width="1200" height="900" fill="#EFE9DD"/>
+  <rect width="1200" height="900" fill="#111419"/>
   <!-- the document -->
-  <rect x="420" y="180" width="360" height="480" rx="4" fill="#FBF8F1" stroke="#6B6560" stroke-width="4" opacity="0.9"/>
-  <rect x="460" y="240" width="180" height="14" rx="7" fill="#223A5E" opacity="0.7"/>
-  <rect x="460" y="280" width="240" height="10" rx="5" fill="#6B6560" opacity="0.4"/>
-  <rect x="460" y="330" width="260" height="10" rx="5" fill="#6B6560" opacity="0.3"/>
-  <rect x="460" y="360" width="220" height="10" rx="5" fill="#6B6560" opacity="0.3"/>
-  <rect x="460" y="420" width="260" height="10" rx="5" fill="#6B6560" opacity="0.3"/>
-  <rect x="460" y="450" width="200" height="10" rx="5" fill="#6B6560" opacity="0.3"/>
-  <rect x="460" y="510" width="120" height="30" rx="4" fill="#7A8B5E" opacity="0.5"/>
-  <rect x="600" y="510" width="120" height="30" rx="4" fill="#223A5E" opacity="0.4"/>
+  <rect x="420" y="180" width="360" height="480" fill="#1d2127" stroke="#a8b0b8" stroke-width="4" opacity="0.9"/>
+  <rect x="460" y="240" width="180" height="14" fill="#4dd8e8" opacity="0.7"/>
+  <rect x="460" y="280" width="240" height="10" fill="#a8b0b8" opacity="0.4"/>
+  <rect x="460" y="330" width="260" height="10" fill="#a8b0b8" opacity="0.3"/>
+  <rect x="460" y="360" width="220" height="10" fill="#a8b0b8" opacity="0.3"/>
+  <rect x="460" y="420" width="260" height="10" fill="#a8b0b8" opacity="0.3"/>
+  <rect x="460" y="450" width="200" height="10" fill="#a8b0b8" opacity="0.3"/>
+  <rect x="460" y="510" width="120" height="30" fill="#6c727a" opacity="0.5"/>
+  <rect x="600" y="510" width="120" height="30" fill="#4dd8e8" opacity="0.4"/>
   <!-- the machine reading it: scan brackets -->
-  <path d="M370 140 h-60 v60 M830 140 h60 v60 M370 700 h-60 v-60 M830 700 h60 v-60" fill="none" stroke="#C9A96E" stroke-width="8" stroke-linecap="round"/>
-  <path d="M330 430 h540" stroke="#C9A96E" stroke-width="4" opacity="0.5" stroke-dasharray="14 10"/>
-  <text x="960" y="810" font-family="serif" font-size="120" fill="rgba(0,0,0,0.08)">読</text>
+  <path d="M370 140 h-60 v60 M830 140 h60 v60 M370 700 h-60 v-60 M830 700 h60 v-60" fill="none" stroke="#e8dc55" stroke-width="8" stroke-linecap="round"/>
+  <path d="M330 430 h540" stroke="#e8dc55" stroke-width="4" opacity="0.5" stroke-dasharray="14 10"/>
+  <text x="960" y="810" font-family="serif" font-size="120" fill="rgba(230,232,234,0.07)">読</text>
 </svg>
