@@ -1,5 +1,6 @@
 ---
 import LanguageSwitcher from './LanguageSwitcher.jsx';
+import Console from './Console.astro';
 
 const { locale, t } = Astro.props;
 const base = `/${locale}`;
@@ -39,6 +40,8 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
       }
     </nav>
 
+    <Console locale={locale} t={t} />
+
     <LanguageSwitcher client:load locale={locale} path={path} />
 
     <button
@@ -54,7 +57,7 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
   </div>
 
   <nav id="mobile-menu" class="hidden md:hidden" aria-label="Main mobile">
-    <div class="flex flex-col gap-5 px-6 pb-8 pt-4">
+    <div class="flex flex-col items-start gap-5 px-6 pb-8 pt-4">
       {
         links.map((link) => (
           <a href={link.href} data-section={link.section} class="nav-link label">
@@ -62,6 +65,11 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
           </a>
         ))
       }
+      <!-- There is no keyboard on a phone to press ⌘K with, and the header has
+           no room for the button, so the console's way in lives here. -->
+      <button type="button" class="nav-link label mobile-console" data-console-open>
+        {t.console.trigger}
+      </button>
     </div>
   </nav>
 </header>
@@ -123,6 +131,25 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
     }
   }
 
+  /* Marked with the same diamond the console's own trigger carries, so the two
+     entry points read as one thing. */
+  .mobile-console {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: none;
+    text-align: left;
+  }
+
+  .mobile-console::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background-color: var(--volt);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
   .nav-hamburger {
     font-family: 'Zen Kaku Gothic New', sans-serif;
     font-size: 18px;
@@ -155,7 +182,9 @@ const isActive = (link) => link.match !== null && path.includes(link.match);
 
     if (target.closest('[data-menu-toggle]')) {
       setOpen(menu.classList.contains('hidden'));
-    } else if (target.closest('#mobile-menu a')) {
+    } else if (target.closest('#mobile-menu a, #mobile-menu button')) {
+      // Includes the console entry: leaving the menu open behind the overlay
+      // would mean dismissing the console only reveals a menu nobody asked for.
       setOpen(false);
     }
   });

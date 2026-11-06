@@ -5,6 +5,30 @@
     "about": "わたしについて",
     "contact": "お問い合わせ"
   },
+  "console": {
+    "trigger": "コンソール",
+    "title": "オペレーターコンソール",
+    "sub": "入力してサイト内を検索",
+    "placeholder": "セクション・作品・コマンドを検索…",
+    "empty": "該当なし",
+    "groups": {
+      "sections": "セクション",
+      "work": "作品",
+      "commands": "コマンド"
+    },
+    "hints": {
+      "move": "移動",
+      "select": "決定",
+      "close": "閉じる"
+    },
+    "commands": {
+      "language": "Switch to English",
+      "github": "GitHub プロフィールを開く",
+      "email": "メールアドレスをコピー",
+      "top": "ページ先頭へ",
+      "copied": "コピーしました"
+    }
+  },
   "hero": {
     "eyebrow": "バックエンド · 機械学習 · モバイル",
     "headline": "ヌオン・ウテイティチャ",
@@ -180,6 +204,13 @@
         "Docker",
         "AWS"
       ]
+    },
+    "readout": {
+      "idle": "未選択",
+      "idleHint": "マークにカーソルを合わせるか選択すると、ここに説明が出ます。",
+      "usedIn": "使用箇所",
+      "role": "役割",
+      "hint": "マークを選択"
     }
   },
   "contact": {

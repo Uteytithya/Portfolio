@@ -209,7 +209,10 @@ const navLinks = [
   .footer-colophon {
     font-size: 13px;
     letter-spacing: 0.04em;
-    color: rgba(230, 232, 234, 0.4);
+    /* 0.4 measured 3.33:1 here — well under AA for 13px. 0.55 is 5.2:1 and
+       still reads as the quietest line in the footer, since the 13px size
+       carries that on its own. */
+    color: rgba(230, 232, 234, 0.55);
   }
 
   .footer-colophon a {

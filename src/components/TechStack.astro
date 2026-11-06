@@ -1,8 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
 import SectionHeader from './SectionHeader.astro';
 import KanjiGhost from './KanjiGhost.astro';
+import { techRoles, techAliases } from '../data/tech.js';
 
-const { t } = Astro.props;
+const { locale = 'en', t } = Astro.props;
 
 const categoryOrder = ['languages', 'frameworks', 'data', 'tools'];
 
@@ -38,6 +40,48 @@ const icons = import.meta.glob('../../public/icons/*.svg', {
 
 const iconMarkup = (name) =>
   icons[`../../public/icons/${iconSlug[name]}.svg`] ?? '';
+
+// ── Where each tool actually appears ────────────────────────────────────────
+// Derived, never authored. The panel reads the same project frontmatter and
+// Experience tags the rest of the page renders, so it cannot claim a tool was
+// used somewhere the page does not already say it was. A tool with no match
+// simply shows no "appears in" list.
+const projects = (
+  await getCollection('projects', ({ id }) => id.startsWith(`${locale}/`))
+).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const experience = t.experience?.items ?? [];
+
+const matches = (haystack, name) => {
+  const wanted = [name, ...(techAliases[name] ?? [])].map((s) => s.toLowerCase());
+  return (haystack ?? []).some((tag) => wanted.includes(String(tag).toLowerCase()));
+};
+
+const usesFor = (name) => [
+  ...projects
+    .filter((p) => matches(p.data.stack, name))
+    .map((p) => ({
+      label: p.data.title,
+      href: `/${locale}/projects/${p.id.split('/')[1]}/`
+    })),
+  ...experience
+    .filter((e) => matches(e.tags, name))
+    .map((e) => ({ label: e.org, href: `/${locale}/#experience` }))
+];
+
+// One blob for the client rather than a data attribute per button.
+const readoutData = Object.fromEntries(
+  categoryOrder.flatMap((key) =>
+    t.techStack.items[key].map((name) => [
+      name,
+      {
+        category: t.techStack.categories[key],
+        role: techRoles[name]?.[locale] ?? techRoles[name]?.en ?? '',
+        uses: usesFor(name)
+      }
+    ])
+  )
+);
 ---
 
 <section id="tech" class="section">
@@ -49,7 +93,7 @@ const iconMarkup = (name) =>
   />
 
   <!-- An ink slab: dark industrial plate, Endfield-inspired -->
-  <div class="tech-plate reveal mt-14">
+  <div class="tech-plate reveal mt-14" data-tech-plate>
     <span class="plate-corner plate-corner--tl" aria-hidden="true"></span>
     <span class="plate-corner plate-corner--tr" aria-hidden="true"></span>
     <span class="plate-corner plate-corner--bl" aria-hidden="true"></span>
@@ -62,16 +106,16 @@ const iconMarkup = (name) =>
             <h3 class="plate-label">{t.techStack.categories[key]}</h3>
             <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-8">
               {t.techStack.items[key].map((item) => (
-                <li class="tech-item" title={item}>
-                  <span
-                    class="tech-icon"
-                    role="img"
-                    aria-label={item}
-                    set:html={iconMarkup(item)}
-                  />
-                  <span class="tech-name" aria-hidden="true">
-                    {item}
-                  </span>
+                <li>
+                  <button
+                    type="button"
+                    class="tech-item"
+                    data-tech={item}
+                    aria-pressed="false"
+                  >
+                    <span class="tech-icon" aria-hidden="true" set:html={iconMarkup(item)} />
+                    <span class="tech-name">{item}</span>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -80,8 +124,40 @@ const iconMarkup = (name) =>
       }
     </div>
 
+    <!-- The readout. Reserves its own height so selecting a mark never shifts
+         the page under the pointer. -->
+    <div class="readout relative z-10" data-readout aria-live="polite">
+      <div class="readout-bar" aria-hidden="true"></div>
+      <div class="readout-body">
+        <div class="readout-id">
+          <span class="readout-cat" data-readout-cat>{t.techStack.readout.hint}</span>
+          <span class="readout-name font-display" data-readout-name>
+            {t.techStack.readout.idle}
+          </span>
+        </div>
+        <div class="readout-detail">
+          <p class="readout-role" data-readout-role>{t.techStack.readout.idleHint}</p>
+          <div class="readout-uses" data-readout-uses hidden>
+            <span class="readout-uses-label">{t.techStack.readout.usedIn}</span>
+            <ul class="readout-uses-list" data-readout-uses-list></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <KanjiGhost kanji="技" tone="light" />
   </div>
+
+  <script type="application/json" data-tech-data set:html={JSON.stringify(readoutData)} />
+  <script
+    type="application/json"
+    data-tech-idle
+    set:html={JSON.stringify({
+      cat: t.techStack.readout.hint,
+      name: t.techStack.readout.idle,
+      role: t.techStack.readout.idleHint
+    })}
+  />
 </section>
 
 <style>
@@ -138,7 +214,11 @@ const iconMarkup = (name) =>
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    cursor: default;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 4px 2px;
+    /* A 52px mark plus the label clears the 44px touch floor on its own. */
   }
 
   .tech-icon {
@@ -159,7 +239,9 @@ const iconMarkup = (name) =>
     }
   }
 
-  .tech-item:hover .tech-icon {
+  .tech-item:hover .tech-icon,
+  .tech-item:focus-visible .tech-icon,
+  .tech-item[aria-pressed='true'] .tech-icon {
     color: var(--volt);
     transform: translateY(-3px);
   }
@@ -170,7 +252,7 @@ const iconMarkup = (name) =>
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(230, 232, 234, 0.55);
+    color: var(--ash);
     opacity: 0;
     transition: opacity 300ms ease;
     white-space: nowrap;
@@ -180,8 +262,184 @@ const iconMarkup = (name) =>
     letter-spacing: 0.08em;
   }
 
-  .tech-item:hover .tech-name {
+  .tech-item:hover .tech-name,
+  .tech-item:focus-visible .tech-name,
+  .tech-item[aria-pressed='true'] .tech-name {
     opacity: 1;
+  }
+
+  /* The pinned mark keeps a bracket under it so you can see what the readout
+     is describing without having to remember what you clicked. */
+  .tech-item[aria-pressed='true'] {
+    position: relative;
+  }
+
+  .tech-item[aria-pressed='true']::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 18px;
+    height: 2px;
+    margin-left: -9px;
+    background-color: var(--volt);
+  }
+
+  /* ── readout ─────────────────────────────────────────────────────────── */
+
+  .readout {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--edge);
+    /* Holds its height across every state so nothing below it moves. */
+    min-height: 168px;
+  }
+
+  @media (min-width: 768px) {
+    .readout {
+      min-height: 132px;
+    }
+  }
+
+  .readout-bar {
+    width: 34px;
+    height: 2px;
+    background-color: var(--volt);
+    margin-bottom: 20px;
+  }
+
+  .readout-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  @media (min-width: 768px) {
+    .readout-body {
+      flex-direction: row;
+      gap: 48px;
+    }
+  }
+
+  .readout-id {
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .readout-id {
+      width: 230px;
+    }
+  }
+
+  .readout-cat {
+    display: block;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--volt);
+  }
+
+  html[lang='ja'] .readout-cat {
+    letter-spacing: 0.1em;
+    text-transform: none;
+  }
+
+  .readout-name {
+    display: block;
+    margin-top: 8px;
+    font-size: 26px;
+    line-height: 1.15;
+    color: var(--bone);
+  }
+
+  /* The idle label is a status, not a title — it should not shout. */
+  .readout[data-state='idle'] .readout-name {
+    font-size: 18px;
+    color: var(--ash);
+  }
+
+  .readout-detail {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .readout-role {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ash);
+  }
+
+  .readout-uses {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* `display` here outranks the `hidden` attribute's UA rule, so the label
+     would show over an empty list. */
+  .readout-uses[hidden] {
+    display: none;
+  }
+
+  .readout-uses-label {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ash-faint);
+  }
+
+  html[lang='ja'] .readout-uses-label {
+    letter-spacing: 0.1em;
+    text-transform: none;
+  }
+
+  .readout-uses-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .readout-uses-list :global(a) {
+    display: inline-block;
+    padding: 5px 11px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ash);
+    text-decoration: none;
+    background-color: var(--steel);
+    box-shadow: inset 0 0 0 1px var(--edge-strong);
+    clip-path: var(--clip-chamfer-sm);
+    transition: color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .readout-uses-list :global(a:hover),
+  .readout-uses-list :global(a:focus-visible) {
+    color: var(--volt);
+    box-shadow: inset 0 0 0 1px var(--volt);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tech-icon,
+    .tech-name,
+    .readout-uses-list :global(a) {
+      transition: none;
+    }
+
+    .tech-item:hover .tech-icon,
+    .tech-item:focus-visible .tech-icon,
+    .tech-item[aria-pressed='true'] .tech-icon {
+      transform: none;
+    }
   }
 
   /* Frosted plate. The watermark shows through, but the panel lifts the
@@ -196,3 +454,111 @@ const iconMarkup = (name) =>
     }
   }
 </style>
+
+<script>
+  function techReadout() {
+    const plate = document.querySelector<HTMLElement>('[data-tech-plate]');
+    const readout = document.querySelector<HTMLElement>('[data-readout]');
+    const dataEl = document.querySelector('[data-tech-data]');
+    const idleEl = document.querySelector('[data-tech-idle]');
+    if (!plate || !readout || !dataEl || !idleEl) return;
+
+    type Use = { label: string; href: string };
+    type Entry = { category: string; role: string; uses: Use[] };
+
+    const data: Record<string, Entry> = JSON.parse(dataEl.textContent || '{}');
+    const idle: { cat: string; name: string; role: string } = JSON.parse(
+      idleEl.textContent || '{}'
+    );
+
+    const catEl = readout.querySelector<HTMLElement>('[data-readout-cat]')!;
+    const nameEl = readout.querySelector<HTMLElement>('[data-readout-name]')!;
+    const roleEl = readout.querySelector<HTMLElement>('[data-readout-role]')!;
+    const usesEl = readout.querySelector<HTMLElement>('[data-readout-uses]')!;
+    const usesList = readout.querySelector<HTMLElement>('[data-readout-uses-list]')!;
+
+    const buttons = [...plate.querySelectorAll<HTMLButtonElement>('[data-tech]')];
+    let pinned: string | null = null;
+
+    const render = (name: string | null) => {
+      const entry = name ? data[name] : null;
+
+      readout.dataset.state = entry ? 'active' : 'idle';
+      catEl.textContent = entry ? entry.category : idle.cat;
+      nameEl.textContent = entry ? name! : idle.name;
+      roleEl.textContent = entry ? entry.role : idle.role;
+
+      // Rebuilt rather than hidden: a stale list behind `hidden` is still in
+      // the accessibility tree on some combinations, and it would be wrong.
+      usesList.replaceChildren();
+      const uses = entry?.uses ?? [];
+      usesEl.hidden = uses.length === 0;
+
+      for (const use of uses) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = use.href;
+        a.textContent = use.label;
+        li.appendChild(a);
+        usesList.appendChild(li);
+      }
+    };
+
+    const setPinned = (name: string | null) => {
+      pinned = name;
+      buttons.forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.tech === name))
+      );
+      render(name);
+
+      // On a phone the grid is one column tall and the readout is below the
+      // fold, so a tap would update something the reader cannot see. Bring it
+      // just into view — `nearest` moves the minimum, so the mark they tapped
+      // does not shoot off the top.
+      if (name && !canHover.matches) {
+        readout.scrollIntoView({
+          block: 'nearest',
+          behavior: reduceMotion.matches ? 'auto' : 'smooth'
+        });
+      }
+    };
+
+    // Hover is a preview, not a choice — it never disturbs what is pinned.
+    // Only on devices that actually hover; on a touchscreen the synthesised
+    // hover would fight the tap.
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    for (const button of buttons) {
+      const name = button.dataset.tech!;
+
+      button.addEventListener('pointerenter', () => {
+        if (canHover.matches) render(name);
+      });
+
+      // Keyboard arrives through focus, and it should read the same as hover.
+      button.addEventListener('focus', () => render(name));
+
+      button.addEventListener('click', () => {
+        setPinned(pinned === name ? null : name);
+      });
+    }
+
+    // Leaving the grid entirely falls back to whatever is pinned.
+    plate.addEventListener('pointerleave', () => render(pinned));
+    plate.addEventListener('focusout', (e) => {
+      const next = (e as FocusEvent).relatedTarget as Node | null;
+      if (!next || !plate.contains(next)) render(pinned);
+    });
+
+    // Escape clears the pin, the same way it closes everything else here.
+    plate.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Escape' && pinned) setPinned(null);
+    });
+
+    render(null);
+  }
+
+  techReadout();
+  document.addEventListener('astro:page-load', techReadout);
+</script>

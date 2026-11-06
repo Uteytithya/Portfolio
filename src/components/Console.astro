@@ -1,0 +1,696 @@
+---
+/**
+ * Operator console — a command palette in HUD dress.
+ *
+ * Opened with Ctrl/Cmd+K, with `/`, or from the bracket button in the header.
+ * It is a shortcut, never the only way to anything: every destination in it is
+ * also reachable from the nav, the footer, or the page itself. That is the
+ * condition for a hidden interface being acceptable at all.
+ *
+ * It matches on typed text rather than requiring memorised verbs, so there is
+ * nothing to learn — but exact commands still work, because people who expect
+ * a console expect to type `work` and get Work.
+ */
+import { getCollection } from 'astro:content';
+
+const { locale = 'en', t } = Astro.props;
+const base = `/${locale}`;
+const other = locale === 'en' ? 'ja' : 'en';
+
+const projects = (
+  await getCollection('projects', ({ id }) => id.startsWith(`${locale}/`))
+).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// Sections exist on the home page; from a sub-route the same entry has to
+// carry the reader home first, which the absolute href already does.
+const sections = [
+  { label: t.nav.work, href: `${base}/#work`, keys: 'work projects 作品' },
+  { label: t.nav.about, href: `${base}/#about`, keys: 'about me わたし' },
+  {
+    label: t.experience.title,
+    href: `${base}/#experience`,
+    keys: 'experience cv resume 経歴'
+  },
+  {
+    label: t.techStack.title,
+    href: `${base}/#tech`,
+    keys: 'tech tools stack skills 技術 道具'
+  },
+  { label: t.nav.contact, href: `${base}/#contact`, keys: 'contact email お問い合わせ' },
+  {
+    label: t.colophon.title,
+    href: `${base}/colophon/`,
+    keys: 'colophon credits type fonts コロフォン'
+  }
+];
+
+const work = projects.map((p) => ({
+  label: p.data.title,
+  href: `/${locale}/projects/${p.id.split('/')[1]}/`,
+  keys: `${p.data.title} ${(p.data.stack ?? []).join(' ')}`
+}));
+
+const commands = [
+  {
+    label: t.console.commands.language,
+    action: 'language',
+    href: `/${other}/`,
+    keys: 'language japanese english 日本語 言語'
+  },
+  {
+    label: t.console.commands.github,
+    action: 'external',
+    href: 'https://github.com/Uteytithya',
+    keys: 'github code repo'
+  },
+  {
+    label: t.console.commands.email,
+    action: 'copy',
+    href: 'uteytithya@gmail.com',
+    keys: 'email copy mail メール'
+  },
+  { label: t.console.commands.top, action: 'top', href: '#', keys: 'top home 先頭' }
+];
+
+const groups = [
+  { id: 'sections', label: t.console.groups.sections, items: sections },
+  { id: 'work', label: t.console.groups.work, items: work },
+  { id: 'commands', label: t.console.groups.commands, items: commands }
+];
+---
+
+<button type="button" class="console-trigger" data-console-open aria-haspopup="dialog">
+  <span class="console-trigger-mark" aria-hidden="true"></span>
+  <span class="console-trigger-text">{t.console.trigger}</span>
+  <kbd class="console-trigger-key" aria-hidden="true">⌘K</kbd>
+</button>
+
+<div class="console" data-console hidden>
+  <div class="console-scrim" data-console-scrim></div>
+
+  <div
+    class="console-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="console-title"
+    data-console-panel
+  >
+    <span class="panel-corner panel-corner--tl" aria-hidden="true"></span>
+    <span class="panel-corner panel-corner--br" aria-hidden="true"></span>
+
+    <div class="console-head">
+      <p class="console-title" id="console-title">{t.console.title}</p>
+      <p class="console-sub">{t.console.sub}</p>
+    </div>
+
+    <div class="console-field">
+      <span class="console-caret" aria-hidden="true">&gt;</span>
+      <input
+        type="text"
+        class="console-input"
+        data-console-input
+        placeholder={t.console.placeholder}
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="console-results"
+        aria-autocomplete="list"
+      />
+    </div>
+
+    <div class="console-results" id="console-results" role="listbox" data-console-results>
+      {
+        groups.map((group) => (
+          <div class="console-group" data-group={group.id}>
+            <p class="console-group-label">{group.label}</p>
+            <ul>
+              {group.items.map((item, i) => (
+                <li
+                  role="option"
+                  id={`console-opt-${group.id}-${i}`}
+                  class="console-option"
+                  data-href={item.href}
+                  data-action={(item as { action?: string }).action ?? 'navigate'}
+                  data-keys={`${item.label} ${item.keys}`.toLowerCase()}
+                  aria-selected="false"
+                >
+                  <span class="console-option-label">{item.label}</span>
+                  <span class="console-option-go" aria-hidden="true">
+                    ↵
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <p class="console-empty" data-console-empty hidden>{t.console.empty}</p>
+    </div>
+
+    <div class="console-foot" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> {t.console.hints.move}</span>
+      <span><kbd>↵</kbd> {t.console.hints.select}</span>
+      <span><kbd>esc</kbd> {t.console.hints.close}</span>
+    </div>
+
+    <p class="console-toast" data-console-toast hidden role="status">
+      {t.console.commands.copied}
+    </p>
+  </div>
+</div>
+
+<style>
+  /* ── trigger ─────────────────────────────────────────────────────────── */
+
+  .console-trigger {
+    display: none;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 12px;
+    background-color: transparent;
+    color: var(--ash);
+    clip-path: var(--clip-chamfer-sm);
+    box-shadow: inset 0 0 0 1px var(--edge-strong);
+    transition: color 220ms ease, box-shadow 220ms ease;
+  }
+
+  @media (min-width: 768px) {
+    .console-trigger {
+      display: inline-flex;
+    }
+  }
+
+  .console-trigger:hover,
+  .console-trigger:focus-visible {
+    color: var(--volt);
+    box-shadow: inset 0 0 0 1px var(--volt);
+  }
+
+  .console-trigger-mark {
+    width: 6px;
+    height: 6px;
+    background-color: var(--volt);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .console-trigger-text {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  html[lang='ja'] .console-trigger-text {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: none;
+  }
+
+  .console-trigger-key {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+    color: var(--ash-faint);
+    padding: 2px 5px;
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+
+  /* ── overlay ─────────────────────────────────────────────────────────── */
+
+  .console {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12vh 20px 20px;
+  }
+
+  /* `display` on the element beats the `hidden` attribute's UA rule, so the
+     panel would sit open over the page on first paint. Any component that
+     sets display and relies on `hidden` needs this line. */
+  .console[hidden] {
+    display: none;
+  }
+
+  .console-scrim {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(11, 12, 14, 0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .console-panel {
+    position: relative;
+    width: min(620px, 100%);
+    max-height: 72vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--steel);
+    clip-path: var(--clip-chamfer);
+    box-shadow: inset 0 0 0 1px var(--edge-strong), 0 24px 70px rgba(0, 0, 0, 0.6);
+    animation: console-in 180ms ease-out;
+  }
+
+  @keyframes console-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .panel-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 0 solid var(--volt);
+    z-index: 2;
+  }
+
+  .panel-corner--tl { top: 12px; left: 12px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .panel-corner--br { bottom: 12px; right: 12px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  .console-head {
+    padding: 22px 26px 0;
+  }
+
+  .console-title {
+    margin: 0;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--volt);
+  }
+
+  html[lang='ja'] .console-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: none;
+  }
+
+  .console-sub {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--ash-faint);
+  }
+
+  .console-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 26px 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--edge-strong);
+  }
+
+  .console-caret {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 15px;
+    color: var(--volt);
+    flex-shrink: 0;
+  }
+
+  .console-input {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: 0;
+    outline: none;
+    color: var(--bone);
+    /* 16px keeps iOS Safari from zooming the viewport on focus. */
+    font-size: 16px;
+    font-family: inherit;
+  }
+
+  .console-input::placeholder {
+    color: var(--ash-faint);
+  }
+
+  .console-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 14px 6px;
+    /* The platform scrollbar is a bright slab against this panel. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--edge-strong) transparent;
+  }
+
+  .console-results::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .console-results::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .console-results::-webkit-scrollbar-thumb {
+    background-color: var(--edge-strong);
+  }
+
+  .console-group[hidden] {
+    display: none;
+  }
+
+  .console-group-label {
+    margin: 10px 0 6px;
+    padding: 0 12px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash-faint);
+  }
+
+  html[lang='ja'] .console-group-label {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: none;
+  }
+
+  .console-group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .console-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 12px;
+    cursor: pointer;
+    color: var(--ash);
+    font-size: 14px;
+    clip-path: var(--clip-chamfer-sm);
+  }
+
+  .console-option[hidden] {
+    display: none;
+  }
+
+  .console-option[aria-selected='true'] {
+    background-color: var(--steel-raised);
+    color: var(--bone);
+    box-shadow: inset 2px 0 0 0 var(--volt);
+  }
+
+  .console-option-go {
+    font-size: 12px;
+    color: var(--volt);
+    opacity: 0;
+  }
+
+  .console-option[aria-selected='true'] .console-option-go {
+    opacity: 1;
+  }
+
+  .console-empty {
+    margin: 0;
+    padding: 26px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ash-faint);
+  }
+
+  /* Keyboard hints on a phone describe keys that are not there. */
+  .console-foot {
+    display: none;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 12px 26px 16px;
+    border-top: 1px solid var(--edge);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ash-faint);
+  }
+
+  @media (min-width: 768px) {
+    .console-foot {
+      display: flex;
+    }
+  }
+
+  html[lang='ja'] .console-foot {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    letter-spacing: 0.04em;
+  }
+
+  .console-foot kbd {
+    font: inherit;
+    padding: 1px 5px;
+    margin-right: 3px;
+    color: var(--ash);
+    box-shadow: inset 0 0 0 1px var(--edge-strong);
+  }
+
+  .console-toast {
+    position: absolute;
+    left: 50%;
+    bottom: -44px;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 8px 16px;
+    white-space: nowrap;
+    background-color: var(--steel-raised);
+    color: var(--volt);
+    clip-path: var(--clip-chamfer-sm);
+    box-shadow: inset 0 0 0 1px var(--volt);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .console-panel {
+      animation: none;
+    }
+
+    .console-trigger {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Astro swaps the whole document on a client-side navigation, so anything
+  // bound to an element dies with it — but listeners put on `document` do not.
+  // Binding those on every page-load would stack a new copy each time, each
+  // closed over a detached panel. They go on once; `api` is what the current
+  // page's panel hands them.
+  let api: { open: (from?: HTMLElement) => void; close: () => void; isOpen: () => boolean } | null =
+    null;
+  let globalsBound = false;
+
+  function operatorConsole() {
+    const root = document.querySelector<HTMLElement>('[data-console]');
+    if (!root) {
+      api = null;
+      return;
+    }
+
+    const input = root.querySelector<HTMLInputElement>('[data-console-input]')!;
+    const results = root.querySelector<HTMLElement>('[data-console-results]')!;
+    const empty = root.querySelector<HTMLElement>('[data-console-empty]')!;
+    const toast = root.querySelector<HTMLElement>('[data-console-toast]')!;
+    const scrim = root.querySelector<HTMLElement>('[data-console-scrim]')!;
+
+    const options = [...root.querySelectorAll<HTMLElement>('.console-option')];
+    const groups = [...root.querySelectorAll<HTMLElement>('.console-group')];
+
+    let visible: HTMLElement[] = options;
+    let cursor = 0;
+    let opener: HTMLElement | null = null;
+    let toastTimer = 0;
+
+    const mark = () => {
+      options.forEach((o) => o.setAttribute('aria-selected', 'false'));
+      const current = visible[cursor];
+
+      if (!current) {
+        input.removeAttribute('aria-activedescendant');
+        return;
+      }
+
+      current.setAttribute('aria-selected', 'true');
+      // Focus stays in the input, so this is the only way a screen reader
+      // learns which option the arrow keys landed on.
+      input.setAttribute('aria-activedescendant', current.id);
+      current.scrollIntoView({ block: 'nearest' });
+    };
+
+    const filter = (raw: string) => {
+      // Every word must appear somewhere in the entry, in any order — enough
+      // to make "race flutter" work without pulling in a fuzzy-match library.
+      const terms = raw.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
+      for (const option of options) {
+        const keys = option.dataset.keys || '';
+        option.hidden = !terms.every((term) => keys.includes(term));
+      }
+
+      for (const group of groups) {
+        group.hidden = !group.querySelector('.console-option:not([hidden])');
+      }
+
+      visible = options.filter((o) => !o.hidden);
+      empty.hidden = visible.length > 0;
+      cursor = 0;
+      mark();
+    };
+
+    const showToast = () => {
+      toast.hidden = false;
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => {
+        toast.hidden = true;
+      }, 1800);
+    };
+
+    const close = () => {
+      root.hidden = true;
+      document.body.style.removeProperty('overflow');
+      opener?.focus();
+      opener = null;
+    };
+
+    const open = (from?: HTMLElement) => {
+      // Opened from the keyboard there is no trigger to hand focus back to, so
+      // remember whatever had it — otherwise closing drops focus on <body> and
+      // the next Tab restarts from the top of the page.
+      opener = from ?? (document.activeElement as HTMLElement | null);
+      if (opener === document.body) opener = null;
+      root.hidden = false;
+      // The panel scrolls; the page behind it must not.
+      document.body.style.overflow = 'hidden';
+      input.value = '';
+      filter('');
+      input.focus();
+    };
+
+    const run = (option: HTMLElement) => {
+      const href = option.dataset.href || '';
+      const action = option.dataset.action || 'navigate';
+
+      if (action === 'copy') {
+        // Clipboard can be refused; falling through to mailto beats a button
+        // that silently does nothing.
+        navigator.clipboard?.writeText(href).then(showToast, () => {
+          window.location.href = `mailto:${href}`;
+        });
+        return;
+      }
+
+      if (action === 'top') {
+        close();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (action === 'external') {
+        close();
+        window.open(href, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      close();
+      window.location.href = href;
+    };
+
+    // ── wiring ───────────────────────────────────────────────────────────
+
+    input.addEventListener('input', () => filter(input.value));
+
+    root.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+
+      if (key === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+
+      if (key === 'ArrowDown' || key === 'ArrowUp') {
+        e.preventDefault();
+        if (!visible.length) return;
+        cursor =
+          (cursor + (key === 'ArrowDown' ? 1 : -1) + visible.length) % visible.length;
+        mark();
+        return;
+      }
+
+      if (key === 'Enter') {
+        e.preventDefault();
+        const current = visible[cursor];
+        if (current) run(current);
+        return;
+      }
+
+      // The dialog is modal, so Tab must not wander out into the page behind
+      // it. With a single focusable control the trap is simply: stay here.
+      if (key === 'Tab') {
+        e.preventDefault();
+        input.focus();
+      }
+    });
+
+    for (const option of options) {
+      option.addEventListener('click', () => run(option));
+      option.addEventListener('pointerenter', () => {
+        const i = visible.indexOf(option);
+        if (i !== -1) {
+          cursor = i;
+          mark();
+        }
+      });
+    }
+
+    scrim.addEventListener('click', close);
+
+    api = { open, close, isOpen: () => !root.hidden };
+
+    // ── document-level, bound once for the life of the tab ───────────────
+    if (globalsBound) return;
+    globalsBound = true;
+
+    document.addEventListener('click', (e) => {
+      const trigger = (e.target as Element)?.closest<HTMLElement>('[data-console-open]');
+      if (trigger) api?.open(trigger);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!api) return;
+      const ev = e as KeyboardEvent;
+
+      if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k') {
+        ev.preventDefault();
+        api.isOpen() ? api.close() : api.open();
+        return;
+      }
+
+      // `/` is a convention, but only where it is not being typed INTO
+      // something — otherwise it hijacks every text field on the page.
+      if (ev.key === '/' && !api.isOpen()) {
+        const el = document.activeElement;
+        const typing =
+          el instanceof HTMLInputElement ||
+          el instanceof HTMLTextAreaElement ||
+          (el as HTMLElement)?.isContentEditable;
+        if (typing) return;
+        ev.preventDefault();
+        api.open();
+      }
+    });
+  }
+
+  operatorConsole();
+  document.addEventListener('astro:page-load', operatorConsole);
+</script>

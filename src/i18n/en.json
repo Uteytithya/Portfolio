@@ -5,6 +5,30 @@
     "about": "About",
     "contact": "Contact"
   },
+  "console": {
+    "trigger": "Console",
+    "title": "Operator Console",
+    "sub": "Type to find anything on this site",
+    "placeholder": "Search sections, work, commands…",
+    "empty": "No match",
+    "groups": {
+      "sections": "Sections",
+      "work": "Selected work",
+      "commands": "Commands"
+    },
+    "hints": {
+      "move": "move",
+      "select": "select",
+      "close": "close"
+    },
+    "commands": {
+      "language": "Switch to 日本語",
+      "github": "Open GitHub profile",
+      "email": "Copy email address",
+      "top": "Back to top",
+      "copied": "Email copied"
+    }
+  },
   "hero": {
     "eyebrow": "Backend · ML · Mobile",
     "headline": "Uteytithya Nuon",
@@ -180,6 +204,13 @@
         "Docker",
         "AWS"
       ]
+    },
+    "readout": {
+      "idle": "No component selected",
+      "idleHint": "Hover or select a mark to read what it does here.",
+      "usedIn": "Appears in",
+      "role": "Role",
+      "hint": "Select a mark"
     }
   },
   "contact": {
