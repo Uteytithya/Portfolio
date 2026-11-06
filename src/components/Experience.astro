@@ -159,4 +159,19 @@ const { t } = Astro.props;
       left: -27px;
     }
   }
+
+  /* Frosted plate. The watermark shows through, but the panel lifts the
+     background enough that small text clears 4.5:1 over it — measured at
+     4.66:1 for the faintest ink tier. Bare small text over the watermark is
+     2.95:1, which is why every block of it gets one of these. */
+  @media (max-width: 1239px) {
+    /* The timeline is bare prose, so it needs a plate of its own. */
+    .timeline {
+      background-color: rgba(21, 24, 28, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 26px 20px 26px 30px;
+      clip-path: var(--clip-chamfer);
+    }
+  }
 </style>

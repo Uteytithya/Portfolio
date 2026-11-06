@@ -14,7 +14,7 @@ const { t } = Astro.props;
   />
 
   <div class="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)]">
-    <div class="reveal">
+    <div class="about-prose reveal">
       <div class="space-y-6 text-ash">
         <p class="about-lead">{t.about.body1}</p>
         <p>{t.about.body2}</p>
@@ -107,5 +107,23 @@ const { t } = Astro.props;
   .fact-value {
     font-size: 16px;
     color: var(--bone);
+  }
+
+  /* Frosted plates. Both of these are bare small text, which over the
+     watermark measures 2.95:1 — well under the floor. On a plate it is
+     4.66:1. See Backbone.astro for where those numbers come from. */
+  @media (max-width: 1239px) {
+    .about-prose,
+    .about-facts {
+      background-color: rgba(21, 24, 28, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 24px 20px;
+      clip-path: var(--clip-chamfer);
+    }
+
+    .fact-row:first-child {
+      border-top: none;
+    }
   }
 </style>

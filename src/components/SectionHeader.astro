@@ -46,6 +46,14 @@ const { num, kanji, title, sub, as: Heading = 'h2' } = Astro.props;
     flex-shrink: 0;
   }
 
+  /* One of the few bits of small text with no plate under it, and the
+     watermark runs behind it. --ash-faint would be 3.71:1 there. */
+  @media (max-width: 1239px) {
+    .header-num {
+      color: var(--ash);
+    }
+  }
+
   .header-sub {
     font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11.5px;

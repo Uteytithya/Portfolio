@@ -55,12 +55,14 @@
       transform: translate(-50%, -50%) scale(2.4);
       /* Behind main/nav/footer, which sit at z-index 1, but above the grid. */
       z-index: 0;
-      /* 0.13, not something more visible. Composited over the ground this
-         puts the worst case — a glyph sitting directly on a lit bond — at
-         4.66:1 for the faintest ink tier. At 0.26 that tier measured 3.31:1
-         and failed. The chain stays readable as a shape by being thicker
-         rather than more opaque, which costs no contrast. */
-      opacity: 0.13;
+      /* 0.22. The ceiling is set by the text that is NOT on a plate — the
+         hero copy, the section numerals, the marquee. At 0.22 every --ash
+         text clears 4.5:1 bare (5.47:1) so the type hierarchy is untouched,
+         and only --ash-faint needs a backing. 0.30 looked better but put bare
+         --ash at 4.35:1, and fixing that meant brightening half the page to
+         bone, which collapses two ink tiers into one. The frosted plates on
+         the content blocks then give headroom on top of this. */
+      opacity: 0.22;
       filter: blur(0.4px);
     }
   }

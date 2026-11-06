@@ -183,4 +183,16 @@ const iconMarkup = (name) =>
   .tech-item:hover .tech-name {
     opacity: 1;
   }
+
+  /* Frosted plate. The watermark shows through, but the panel lifts the
+     background enough that small text clears 4.5:1 over it — measured at
+     4.66:1 for the faintest ink tier. Bare small text over the watermark is
+     2.95:1, which is why every block of it gets one of these. */
+  @media (max-width: 1239px) {
+    .tech-plate {
+      background-color: rgba(15, 17, 19, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  }
 </style>
