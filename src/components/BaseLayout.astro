@@ -63,10 +63,14 @@ const PRELOAD = [
     <link rel="stylesheet" href="/fonts/fonts.css" />
 
     <!-- Reveal animations start at opacity 0 and are cleared by script. Without
-         this the whole page would be blank to anyone browsing without JS. -->
+         this the whole page would be blank to anyone browsing without JS.
+         `.reveal-group > *` has to be here too — the children carry the
+         opacity in a group, so covering only the container would still
+         leave every staggered item invisible. -->
     <noscript>
       <style>
-        .reveal {
+        .reveal,
+        .reveal-group > * {
           opacity: 1 !important;
           transform: none !important;
         }
@@ -76,6 +80,7 @@ const PRELOAD = [
     <ClientRouter />
   </head>
   <body>
+    <div class="nav-progress" data-nav-progress aria-hidden="true"></div>
     <PaperGrain />
     <a href="#main" class="skip-link">{skip}</a>
     <Backbone />
@@ -85,9 +90,13 @@ const PRELOAD = [
     </main>
     <slot name="footer" />
     <script>
-      // Scroll reveal — sections drift in once, then rest.
+      // Scroll reveal — sections drift in once, then rest. A `.reveal-group`
+      // is observed exactly like a `.reveal`; the difference is only which
+      // element carries the opacity, and that is settled in CSS.
       function observeReveals() {
-        const els = document.querySelectorAll('.reveal:not(.revealed)');
+        const els = document.querySelectorAll(
+          '.reveal:not(.revealed), .reveal-group:not(.revealed)'
+        );
         if (!els.length) return;
 
         // Same reasoning as the noscript block: if we cannot observe, show
@@ -117,6 +126,38 @@ const PRELOAD = [
 
       init();
       document.addEventListener('astro:page-load', init);
+
+      // ── navigation progress ──────────────────────────────
+      // Module scope, so these bind once for the life of the tab. Binding
+      // them inside init() would stack a fresh copy on every client-side
+      // navigation, each closed over a bar that has since been swapped out.
+      //
+      // The bar element itself IS swapped, so it is looked up per event
+      // rather than captured here.
+      let progressTimer: number | undefined;
+
+      const stopProgress = () => {
+        clearTimeout(progressTimer);
+        document
+          .querySelector('[data-nav-progress]')
+          ?.classList.remove('is-loading');
+      };
+
+      document.addEventListener('astro:before-preparation', () => {
+        // A navigation served from cache finishes in a few milliseconds, and
+        // a bar that appears and vanishes inside that window reads as a
+        // glitch. Nothing is shown unless the fetch outlasts the delay.
+        progressTimer = window.setTimeout(() => {
+          document
+            .querySelector('[data-nav-progress]')
+            ?.classList.add('is-loading');
+        }, 140);
+      });
+
+      // after-swap fires before page-load and before the new document has
+      // painted, which is the moment the old bar stops being true.
+      document.addEventListener('astro:after-swap', stopProgress);
+      document.addEventListener('astro:page-load', stopProgress);
     </script>
   </body>
 </html>

@@ -301,19 +301,145 @@ html[lang='ja'] .prose-quiet h3 {
   color: var(--signal);
 }
 
-/* ── Scroll reveal ────────────────────────────────────── */
+/* ── Motion ───────────────────────────────────────────── */
 
+/* One curve for everything that enters: a hard start that settles rather
+   than easing out both ends. Defined once so the stagger, the page
+   transition and anything added later cannot drift apart. */
+:root {
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --enter-dur: 0.6s;
+  --enter-rise: 16px;
+  /* Gap between one child and the next in a staggered group. Small enough
+     that a seven-child group finishes inside half a second — a cascade the
+     reader waits on is a cascade that is too slow. */
+  --enter-step: 55ms;
+}
+
+/* Reveal — a block drifts in once, then rests. The same rule covers the
+   first paint and a scroll: whatever is already on screen when the
+   observer attaches reveals straight away, which IS the load entrance. */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(var(--enter-rise));
   transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--enter-dur) var(--ease-enter),
+    transform var(--enter-dur) var(--ease-enter);
 }
 
 .reveal.revealed {
   opacity: 1;
   transform: none;
+}
+
+/* For a block that should land after a group beside it has started, so the
+   two read as one entrance rather than two things happening at once. */
+.reveal--late {
+  transition-delay: 160ms;
+}
+
+/* Reveal group — the container is observed, but its children enter one
+   after another instead of as one slab. Used where the content is a list
+   of comparable things (the hero's lines, the fact ledger, the timeline)
+   and moving them together reads as a single object rather than as items.
+
+   The delays are nth-child rather than a script-set custom property so a
+   group still cascades correctly with JS disabled past the noscript
+   fallback, and so nothing has to run per element on load. */
+.reveal-group > * {
+  opacity: 0;
+  transform: translateY(calc(var(--enter-rise) - 2px));
+  transition:
+    opacity var(--enter-dur) var(--ease-enter),
+    transform var(--enter-dur) var(--ease-enter);
+}
+
+.reveal-group.revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-group.revealed > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-group.revealed > *:nth-child(2) { transition-delay: calc(var(--enter-step) * 1); }
+.reveal-group.revealed > *:nth-child(3) { transition-delay: calc(var(--enter-step) * 2); }
+.reveal-group.revealed > *:nth-child(4) { transition-delay: calc(var(--enter-step) * 3); }
+.reveal-group.revealed > *:nth-child(5) { transition-delay: calc(var(--enter-step) * 4); }
+.reveal-group.revealed > *:nth-child(6) { transition-delay: calc(var(--enter-step) * 5); }
+.reveal-group.revealed > *:nth-child(7) { transition-delay: calc(var(--enter-step) * 6); }
+.reveal-group.revealed > *:nth-child(8) { transition-delay: calc(var(--enter-step) * 7); }
+/* Past the eighth the cascade stops lengthening. A long list would
+   otherwise hold its last item back by a second or more, and a reader who
+   has scrolled to it is waiting on an animation for no reason. */
+.reveal-group.revealed > *:nth-child(n + 9) { transition-delay: calc(var(--enter-step) * 8); }
+
+/* ── Page transition ──────────────────────────────────── */
+
+/* Replaces the router's default cross-fade. The outgoing page lifts and
+   leaves quickly; the incoming one rises into place on the same curve the
+   reveals use, so a navigation and a scroll feel like the same site.
+
+   `html::` rather than a bare `::view-transition-old` so these outrank the
+   router's own root rules whatever order the stylesheets land in. */
+@media (prefers-reduced-motion: no-preference) {
+  html::view-transition-old(root) {
+    animation: page-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+
+  html::view-transition-new(root) {
+    animation: page-in 420ms var(--ease-enter) both;
+  }
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ── Navigation progress ──────────────────────────────── */
+
+/* A client-side navigation holds the old page on screen while the next one
+   is fetched. On a slow connection that is a click with no response at
+   all, so the bar is the acknowledgement. It never reaches the right edge:
+   it cannot know how far along the fetch is, and a bar that completes
+   before the page arrives is a lie about progress. The swap removes it. */
+.nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  background-color: var(--volt);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-progress.is-loading {
+  opacity: 1;
+  animation: nav-progress 12s cubic-bezier(0.1, 0.75, 0.2, 1) forwards;
+}
+
+@keyframes nav-progress {
+  0% {
+    transform: scaleX(0);
+  }
+  40% {
+    transform: scaleX(0.6);
+  }
+  100% {
+    transform: scaleX(0.94);
+  }
 }
 
 ::selection {
@@ -358,10 +484,18 @@ html[lang='ja'] .prose-quiet h3 {
     scroll-behavior: auto;
   }
 
-  .reveal {
+  .reveal,
+  .reveal-group > * {
     opacity: 1;
     transform: none;
     transition: none;
   }
 
+  /* The bar still says "something is happening" — it just says it by being
+     there rather than by crawling. */
+  .nav-progress.is-loading {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.6;
+  }
 }

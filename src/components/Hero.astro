@@ -12,7 +12,11 @@ const { locale, t } = Astro.props;
   <!-- vertical kana rail, running down the outer edge -->
   <span class="hero-rail" aria-hidden="true">{t.hero.rail}</span>
 
-  <div class="reveal w-full py-16 md:w-[46%] md:py-24">
+  <!-- A group, not a block: the eyebrow, headline, rule, subtitle and
+       buttons arrive in reading order rather than sliding up as one
+       slab. On first paint this is the page's entrance — the observer
+       fires immediately for whatever is already on screen. -->
+  <div class="reveal-group w-full py-16 md:w-[46%] md:py-24">
     <p class="hero-eyebrow">
       <span class="marker" aria-hidden="true"></span>
       <span>{t.hero.eyebrow}</span>
@@ -42,7 +46,7 @@ const { locale, t } = Astro.props;
   <div
     class="relative flex w-full items-center justify-center pb-20 md:w-[54%] md:self-stretch md:pb-0"
   >
-    <figure class="hero-portrait reveal">
+    <figure class="hero-portrait reveal reveal--late">
       <!-- The portrait is the LCP element on every first paint, so it is served
            as responsive AVIF/WebP, eager, and fetched ahead of everything else. -->
       <Image
