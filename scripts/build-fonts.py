@@ -40,15 +40,15 @@ UPSTREAM = "https://raw.githubusercontent.com/google/fonts/main/ofl/"
 
 # Only the weights the stylesheets actually ask for. Zen Kaku has no 600 (it
 # steps 500 -> 700) and nothing on the site requests 700, so it ships two.
+# Zen Old Mincho is retired. The industrial redesign has no serif in it, and
+# nothing in src/ asks for the family any more — the three weights were still
+# being generated and shipped while no page ever fetched them.
 FACES = [
-    ("Zen Old Mincho", 400, "zenoldmincho", "ZenOldMincho-Regular.ttf"),
-    ("Zen Old Mincho", 500, "zenoldmincho", "ZenOldMincho-Medium.ttf"),
-    ("Zen Old Mincho", 600, "zenoldmincho", "ZenOldMincho-SemiBold.ttf"),
     ("Zen Kaku Gothic New", 400, "zenkakugothicnew", "ZenKakuGothicNew-Regular.ttf"),
     ("Zen Kaku Gothic New", 500, "zenkakugothicnew", "ZenKakuGothicNew-Medium.ttf"),
 ]
 
-LICENSES = [("zenoldmincho", "OFL.txt"), ("zenkakugothicnew", "OFL.txt")]
+LICENSES = [("zenkakugothicnew", "OFL.txt")]
 
 
 # Everything set in the display face. Kept in sync with the `font-family:
@@ -212,8 +212,9 @@ def main():
 
     OUT.mkdir(parents=True, exist_ok=True)
     per_family = {
-        "Zen Old Mincho": "".join(sorted(display_set)),
-        "Zen Kaku Gothic New": "".join(sorted(body_set)),
+        # One family sets display and body alike, so it needs the union. Giving
+        # it body_set alone would drop any glyph that appears only in a heading.
+        "Zen Kaku Gothic New": "".join(sorted(display_set | body_set)),
     }
 
     total_before = 0

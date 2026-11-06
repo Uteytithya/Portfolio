@@ -89,7 +89,7 @@ const navLinks = [
 
 <style>
   .site-footer {
-    background-color: var(--sumi-charcoal);
+    background-color: var(--steel-deep);
     margin-top: 48px;
   }
 
@@ -100,7 +100,7 @@ const navLinks = [
   }
 
   .footer-title {
-    color: var(--washi);
+    color: var(--bone);
   }
 
   .footer-rule {
@@ -109,10 +109,12 @@ const navLinks = [
     gap: 16px;
   }
 
+  /* The station mark, in volt like every other structural glyph. Alert is
+     reserved for an actual fault and appears nowhere on this site. */
   .footer-kanji {
-    font-family: 'Zen Old Mincho', serif;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
     font-size: 15px;
-    color: var(--vermilion);
+    color: var(--volt);
     flex-shrink: 0;
   }
 
@@ -121,8 +123,8 @@ const navLinks = [
     height: 1px;
     background: linear-gradient(
       to right,
-      rgba(247, 243, 235, 0.22),
-      rgba(247, 243, 235, 0.04)
+      rgba(230, 232, 234, 0.22),
+      rgba(230, 232, 234, 0.04)
     );
   }
 
@@ -130,7 +132,7 @@ const navLinks = [
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.22em;
-    color: rgba(247, 243, 235, 0.5);
+    color: rgba(230, 232, 234, 0.5);
     flex-shrink: 0;
   }
 
@@ -139,7 +141,7 @@ const navLinks = [
     font-weight: 500;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--volt);
   }
 
   html[lang='ja'] .footer-sub {
@@ -149,13 +151,13 @@ const navLinks = [
   .footer-invitation {
     max-width: 460px;
     font-size: 17px;
-    color: rgba(247, 243, 235, 0.68);
+    color: rgba(230, 232, 234, 0.68);
   }
 
   .footer-email {
     font-size: 22px;
     font-weight: 400;
-    color: var(--washi);
+    color: var(--bone);
     text-decoration: none;
     border-bottom: 1px solid rgba(201, 169, 110, 0.5);
     padding-bottom: 2px;
@@ -167,8 +169,8 @@ const navLinks = [
   }
 
   .footer-email:hover {
-    color: var(--gold);
-    border-bottom-color: var(--gold);
+    color: var(--volt);
+    border-bottom-color: var(--volt);
   }
 
   .footer-label {
@@ -176,12 +178,12 @@ const navLinks = [
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--volt);
   }
 
   .footer-link {
     font-size: 16px;
-    color: rgba(247, 243, 235, 0.72);
+    color: rgba(230, 232, 234, 0.72);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     padding-bottom: 1px;
@@ -189,36 +191,36 @@ const navLinks = [
   }
 
   a.footer-link:hover {
-    color: var(--washi);
-    border-bottom-color: rgba(247, 243, 235, 0.4);
+    color: var(--volt);
+    border-bottom-color: rgba(230, 232, 234, 0.4);
   }
 
   .footer-bottom {
-    border-color: rgba(247, 243, 235, 0.12);
+    border-color: rgba(230, 232, 234, 0.12);
   }
 
   .footer-farewell {
     font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 400;
     font-size: 16px;
-    color: rgba(247, 243, 235, 0.55);
+    color: rgba(230, 232, 234, 0.55);
   }
 
   .footer-colophon {
     font-size: 13px;
     letter-spacing: 0.04em;
-    color: rgba(247, 243, 235, 0.4);
+    color: rgba(230, 232, 234, 0.4);
   }
 
   .footer-colophon a {
-    color: rgba(247, 243, 235, 0.6);
+    color: rgba(230, 232, 234, 0.6);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: color 300ms ease, border-color 300ms ease;
   }
 
   .footer-colophon a:hover {
-    color: var(--gold);
+    color: var(--volt);
     border-bottom-color: rgba(201, 169, 110, 0.5);
   }
 </style>

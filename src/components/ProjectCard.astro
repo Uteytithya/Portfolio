@@ -45,9 +45,9 @@ const {
       <span class="card-year">{year}</span>
     </div>
 
-    <Title class="card-title font-display mt-4 text-sumi-ink">{title}</Title>
+    <Title class="card-title font-display mt-4 text-bone">{title}</Title>
 
-    {description && <p class="mt-4 text-stone">{description}</p>}
+    {description && <p class="mt-4 text-ash">{description}</p>}
 
     {
       stack.length > 0 && (
@@ -75,17 +75,20 @@ const {
 </article>
 
 <style>
+  /* The card was a cream paper plate. It is now a steel one: chamfered at
+     top-right and bottom-left, bracketed at the two corners that stay square. */
   .project-card {
     position: relative;
-    background-color: #fbf8f1;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 2px;
-    box-shadow: inset 0 0 0 1px rgba(34, 58, 94, 0.03),
-      0 2px 8px var(--ink-wash);
-    transition: transform 400ms ease, box-shadow 400ms ease;
+    background-color: var(--steel);
+    clip-path: var(--clip-chamfer);
+    transition: background-color 300ms ease;
   }
 
-  /* Vermilion thread along the left edge, revealed on hover. */
+  .project-card:hover {
+    background-color: var(--steel-raised);
+  }
+
+  /* The live edge: a volt rule that runs down the card on hover. */
   .project-card::before {
     content: '';
     position: absolute;
@@ -93,21 +96,35 @@ const {
     top: 0;
     bottom: 0;
     width: 2px;
-    background-color: var(--vermilion);
+    background-color: var(--volt);
     transform: scaleY(0);
     transform-origin: top;
     transition: transform 400ms ease;
     z-index: 3;
   }
 
-  .project-card:hover {
-    transform: translateY(-2px);
-    box-shadow: inset 0 0 0 1px rgba(34, 58, 94, 0.03),
-      0 8px 24px rgba(43, 41, 40, 0.08);
-  }
-
   .project-card:hover::before {
     transform: scaleY(1);
+  }
+
+  /* Bracket on the top-left square corner. */
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 14px;
+    height: 14px;
+    border-top: 1.5px solid var(--volt);
+    border-left: 1.5px solid var(--volt);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity 300ms ease;
+  }
+
+  .project-card:hover::after {
+    opacity: 1;
   }
 
   .card-cover {
@@ -119,6 +136,7 @@ const {
   .card-media {
     position: relative;
     overflow: hidden;
+    background-color: var(--steel-deep);
   }
 
   .card-img {
@@ -127,28 +145,30 @@ const {
     min-height: 260px;
     width: 100%;
     object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 600ms ease, transform 700ms ease;
+    /* No grayscale. That filter existed to tame colourful photo thumbnails;
+       the artwork is now drawn in this palette, so desaturating it only
+       greys out the volt scan marks it is supposed to be showing off. */
+    filter: brightness(0.82);
+    transition: filter 500ms ease, transform 600ms ease;
   }
 
   .project-card:hover .card-img {
-    filter: grayscale(0%);
+    filter: brightness(1);
     transform: scale(1.02);
   }
 
-  /* Big plate number, sitting over the image corner */
+  /* The index reads as a unit number stencilled on the plate. */
   .card-index {
     position: absolute;
-    left: 20px;
-    top: 12px;
+    left: 18px;
+    top: 10px;
     z-index: 2;
-    font-family: 'Zen Old Mincho', serif;
-    font-weight: 600;
-    font-size: 60px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 48px;
+    font-variant-numeric: tabular-nums;
     line-height: 1;
-    color: var(--washi);
-    mix-blend-mode: difference;
-    opacity: 0.75;
+    color: var(--volt);
+    opacity: 0.5;
     pointer-events: none;
   }
 
@@ -175,59 +195,79 @@ const {
     content: '';
     flex: 1;
     height: 1px;
-    background-color: var(--paper-edge);
+    background-color: var(--edge-strong);
   }
 
   .card-year {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    color: var(--stone);
-    opacity: 0.75;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    color: var(--ash-faint);
     order: 3;
   }
 
   .card-title {
-    font-size: 31px;
+    font-size: 27px;
     line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
   }
 
   html[lang='ja'] .card-title {
-    font-size: 27px;
+    font-size: 24px;
     line-height: 1.4;
+    text-transform: none;
   }
 
   .card-stack {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 7px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .stack-chip {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--stone);
-    border: 1px solid var(--paper-edge);
-    border-radius: 2px;
-    padding: 4px 10px;
-    background-color: rgba(247, 243, 235, 0.6);
+    letter-spacing: 0.04em;
+    padding: 5px 10px;
+    color: var(--ash);
+    background-color: var(--steel-deep);
+    border-left: 2px solid var(--edge-strong);
   }
 
   .card-link {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--volt);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    align-self: flex-start;
     position: relative;
     z-index: 2;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    color: var(--indigo);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    align-self: flex-start;
-    transition: border-color 300ms ease, gap 300ms ease;
+  }
+
+  html[lang='ja'] .card-link {
+    letter-spacing: 0.08em;
+    text-transform: none;
   }
 
   .card-link:hover {
-    border-bottom-color: var(--indigo);
+    color: var(--bone);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card,
+    .project-card::before,
+    .card-img,
+    .project-card::after {
+      transition: none;
+    }
   }
 </style>

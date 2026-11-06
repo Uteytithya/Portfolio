@@ -66,7 +66,7 @@ import KanjiGhost from '../components/KanjiGhost.astro';
     font-size: clamp(64px, 14vw, 108px);
     font-weight: 600;
     line-height: 1;
-    color: var(--sumi-ink);
+    color: var(--bone);
     opacity: 0.14;
     letter-spacing: 0.04em;
   }
@@ -81,29 +81,29 @@ import KanjiGhost from '../components/KanjiGhost.astro';
   .notfound-title {
     font-size: clamp(27px, 4.5vw, 36px);
     line-height: 1.25;
-    color: var(--sumi-ink);
+    color: var(--bone);
   }
 
   /* lang="ja" on an element does not trigger the html[lang='ja'] font rules,
      so the Japanese faces are named directly here. */
   .notfound-title-ja {
-    font-family: 'Zen Old Mincho', serif;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
     font-weight: 500;
     font-size: 17px;
     letter-spacing: 0.08em;
-    color: var(--stone);
+    color: var(--ash);
   }
 
   .notfound-body {
     font-size: 16px;
-    color: var(--stone);
+    color: var(--ash);
   }
 
   .notfound-body-ja {
     font-family: 'Zen Kaku Gothic New', sans-serif;
     font-size: 14px;
     letter-spacing: 0.04em;
-    color: var(--stone);
+    color: var(--ash);
     opacity: 0.8;
   }
 
@@ -121,15 +121,15 @@ import KanjiGhost from '../components/KanjiGhost.astro';
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    color: var(--sumi-ink);
+    color: var(--bone);
     text-decoration: none;
-    border: 1px solid var(--paper-edge);
-    border-radius: 2px;
+    border: 1px solid var(--edge-strong);
+    clip-path: var(--clip-chamfer-sm);
     transition: color 300ms ease, border-color 300ms ease;
   }
 
   .notfound-link:hover {
-    color: var(--indigo);
-    border-color: var(--indigo);
+    color: var(--volt);
+    border-color: var(--signal);
   }
 </style>

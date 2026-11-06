@@ -3,22 +3,28 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
   theme: {
     extend: {
+      // Mirrors the tokens in src/styles/global.css. Kept in step by hand:
+      // the CSS variables are the source of truth, these are the Tailwind
+      // utilities that need the same values at build time.
       colors: {
-        washi: '#F7F3EB',
-        'washi-warm': '#FBF8F1',
-        'sumi-charcoal': '#1E1D1C',
-        'sumi-ink': '#2B2928',
-        stone: '#57524c',
-        indigo: '#223A5E',
-        vermilion: '#C73E3A',
-        gold: '#C9A96E',
-        matcha: '#7A8B5E'
+        void: '#0b0c0e',
+        'steel-deep': '#0f1113',
+        steel: '#15181c',
+        'steel-raised': '#1d2127',
+        bone: '#e6e8ea',
+        ash: '#a6adb5',
+        'ash-faint': '#878d96',
+        volt: '#e8dc55',
+        'volt-ink': '#8f8620',
+        signal: '#4dd8e8',
+        alert: '#ff4d3d'
       },
       fontFamily: {
-        'display-en': ['"Playfair Display"', 'serif'],
-        'body-en': ['"Zen Kaku Gothic New"', 'sans-serif'],
-        'display-ja': ['"Noto Serif JP"', 'serif'],
-        'body-ja': ['"Zen Kaku Gothic New"', 'sans-serif']
+        // One family carries the site. The old display-en / display-ja serif
+        // entries pointed at Playfair Display and Noto Serif JP, neither of
+        // which was still loaded.
+        sans: ['"Zen Kaku Gothic New"', 'sans-serif'],
+        mono: ['ui-monospace', '"SF Mono"', 'Menlo', 'Consolas', 'monospace']
       },
       maxWidth: {
         site: '1200px'

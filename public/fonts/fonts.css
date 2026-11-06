@@ -4,30 +4,6 @@
    introducing new kanji — Latin and kana are already covered in full. */
 
 @font-face {
-  font-family: 'Zen Old Mincho';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/zen-old-mincho-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Zen Old Mincho';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/zen-old-mincho-500.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Zen Old Mincho';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/zen-old-mincho-600.woff2') format('woff2');
-}
-
-@font-face {
   font-family: 'Zen Kaku Gothic New';
   font-style: normal;
   font-weight: 400;

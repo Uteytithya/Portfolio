@@ -2,124 +2,260 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════
+   Industrial HUD — the site's design system.
+
+   Near-black grounds, hairline structure, safety yellow doing the
+   structural work, chamfered panels with corner brackets. Radius is zero
+   everywhere: nothing here is soft.
+
+   The discipline that keeps this from being "a dark page with a bright
+   accent": volt is *structure*, not decoration — it draws rules, brackets,
+   markers and active states, and never fills a large area. Signal and alert
+   appear at most once per screen each. If three accents are competing in
+   one viewport, something has gone wrong.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --washi: #F7F3EB;
-  --washi-warm: #FBF8F1;
-  --sumi-charcoal: #1E1D1C;
-  --sumi-ink: #2B2928;
-  --stone: #57524c;
-  --indigo: #223A5E;
-  --vermilion: #C73E3A;
-  --gold: #C9A96E;
-  /* The same gold, taken down far enough to be legible as small text on washi
-     (4.7:1 vs the 2.0:1 of --gold). --gold itself stays as-is for hairlines,
-     borders, and any text sitting on the dark sumi surfaces, where it is
-     already well clear of AA. */
-  --gold-ink: #856830;
-  --matcha: #7A8B5E;
-  --paper-edge: rgba(0, 0, 0, 0.08);
-  --ink-wash: rgba(43, 41, 40, 0.06);
-  /* Endfield-inspired volt accent — lives only on dark surfaces */
-  --volt: #e8dc55;
+  /* ── Ground ─────────────────────────────────────────── */
+  --void: #0b0c0e; /* the page */
+  --steel-deep: #0f1113; /* inset wells */
+  --steel: #15181c; /* panels */
+  --steel-raised: #1d2127; /* raised panels, hover */
+
+  /* ── Ink ────────────────────────────────────────────── */
+  /* Ratios below are against --steel-raised, the lightest surface any of
+     these sit on. Measuring against the page alone was how --ash-faint ended
+     up failing at 4.03:1 on panels while looking fine in the token table. */
+  --bone: #e6e8ea; /* primary text — 13.6:1 on steel-raised */
+  --ash: #a6adb5; /* secondary text — 7.0:1 */
+  --ash-faint: #878d96; /* annotations — 4.7:1 */
+
+  /* ── Structure ──────────────────────────────────────── */
+  --edge: rgba(230, 232, 234, 0.11);
+  --edge-strong: rgba(230, 232, 234, 0.2);
+  --shadow: rgba(0, 0, 0, 0.55);
+
+  /* ── Accents ────────────────────────────────────────── */
+  --volt: #e8dc55; /* safety yellow: structure, markers, active */
+  --volt-ink: #8f8620; /* the same yellow, legible on light surfaces */
+  --signal: #4dd8e8; /* data and coordinates, sparing */
+  --alert: #ff4d3d; /* once per page, at most */
+
+  /* ── Geometry ───────────────────────────────────────── */
+  /* Top-right and bottom-left are cut away, which leaves top-left and
+     bottom-right square — and those are exactly where the brackets sit, so
+     the clip and the chrome agree with each other. */
+  --chamfer: 14px;
+  --chamfer-sm: 8px;
+  --clip-chamfer: polygon(
+    0 0,
+    calc(100% - var(--chamfer)) 0,
+    100% var(--chamfer),
+    100% 100%,
+    var(--chamfer) 100%,
+    0 calc(100% - var(--chamfer))
+  );
+  --clip-chamfer-sm: polygon(
+    0 0,
+    calc(100% - var(--chamfer-sm)) 0,
+    100% var(--chamfer-sm),
+    100% 100%,
+    var(--chamfer-sm) 100%,
+    0 calc(100% - var(--chamfer-sm))
+  );
 }
 
 html {
-  background-color: var(--washi);
+  background-color: var(--void);
   scroll-behavior: smooth;
-  /* The nav is sticky and 64px tall — without this, every in-page anchor lands
-     with its section heading tucked underneath it. */
+  /* The nav is sticky and 64px tall — without this, every in-page anchor
+     lands with its heading tucked underneath it. */
   scroll-padding-top: 88px;
 }
 
-/* One body face for both languages, as with the display face above. Zen Kaku
-   Gothic New draws its Latin alongside its kana, so the whole site now runs on
-   two families — this one and Zen Old Mincho. */
 body {
-  background-color: var(--washi);
-  color: var(--sumi-ink);
+  background-color: var(--void);
+  color: var(--bone);
   font-family: 'Zen Kaku Gothic New', sans-serif;
   font-weight: 400;
-  /* 18px, not the 17px this held under Inter. Zen Kaku scales its Latin down to
-     sit beside full-width kana, so its x-height is 0.48em against Inter's 0.55 —
-     the same pixel size reads about 13% smaller. Cap height is nearly unchanged
-     (0.70 vs 0.73), which is why the uppercase labels keep their sizes and only
-     lowercase running text is bumped. */
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Japanese still wants its own measure — denser type, more leading — but no
-   longer a different family. */
+/* Japanese sets denser and wants more leading. */
 html[lang='ja'] body {
-  font-size: 16px;
+  font-size: 15.5px;
   line-height: 2;
 }
 
-/* ── Typography roles ─────────────────────────────── */
+/* A faint engineering grid over the whole page. It is what keeps the ground
+   reading as a surface rather than as absence — flat black is what makes a
+   dark site look cheap. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--edge) 1px, transparent 1px),
+    linear-gradient(90deg, var(--edge) 1px, transparent 1px);
+  background-size: 96px 96px;
+  opacity: 0.35;
+}
 
-/* One display face for both languages. Zen Old Mincho draws its Latin alongside
-   its kana and kanji, so English and Japanese finally share a skeleton instead
-   of being a Didone and a Mincho standing next to each other. No `lang` override
-   is needed here any more — only the sizing rules below still differ. */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+
+/* One family carries the whole site now. The brush serif that used to set
+   the display type has no place on an industrial surface, and dropping it
+   means three Zen Old Mincho weights are never downloaded at all — an
+   unused @font-face is not fetched. */
 .font-display {
-  font-family: 'Zen Old Mincho', serif;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
   font-weight: 500;
-  /* Mincho letterforms are already tightly fitted; the negative tracking that
-     opened up Playfair closes these up too far. */
-  letter-spacing: 0;
+  letter-spacing: -0.005em;
 }
 
 .text-hero {
-  font-size: clamp(48px, 7.5vw, 72px);
-  font-weight: 600;
-  line-height: 1.08;
+  font-size: clamp(42px, 6.6vw, 72px);
+  font-weight: 500;
+  line-height: 1.04;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
 }
 
 html[lang='ja'] .text-hero {
-  font-size: clamp(38px, 6.5vw, 60px);
-  line-height: 1.3;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.35;
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 .text-section {
-  font-size: clamp(36px, 5vw, 52px);
-  line-height: 1.15;
+  font-size: clamp(30px, 4.2vw, 46px);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 html[lang='ja'] .text-section {
-  font-size: clamp(30px, 4.5vw, 44px);
+  font-size: clamp(26px, 3.6vw, 38px);
   line-height: 1.4;
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
+/* Small tracked caps are the native register of this kind of interface —
+   machine labels, not decorative eyebrows. */
 .label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 html[lang='ja'] .label {
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  text-transform: none;
 }
 
-/* Zen Kaku Gothic New has no 600 — it steps 500 → 700 — so the label styles
-   that used to sit at Inter's semibold now use 500. At 700 these small tracked
-   caps turn clumsy against the paper. (.text-hero and the seal keep 600: those
-   are set in Zen Old Mincho, which does have it.) */
 .tag {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--indigo);
+  color: var(--signal);
 }
 
-/* ── Section rhythm: ma (間) ──────────────────────── */
+html[lang='ja'] .tag {
+  text-transform: none;
+}
+
+/* Measured values, coordinates, counts. Monospace here carries data; it is
+   not dressing up a label. */
+.data {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ── Panels ───────────────────────────────────────────── */
+
+.panel {
+  position: relative;
+  background-color: var(--steel);
+  clip-path: var(--clip-chamfer);
+}
+
+.panel--deep {
+  background-color: var(--steel-deep);
+}
+
+/* Corner brackets, on the two corners the chamfer leaves square. */
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--volt);
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.panel::before {
+  top: 8px;
+  left: 8px;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.panel::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 1.5px;
+  border-right-width: 1.5px;
+}
+
+/* A hairline that follows the chamfer. A border cannot track a clip-path,
+   so the outline is a slightly larger clipped layer sitting behind. */
+.panel-outline {
+  position: relative;
+  background-color: var(--edge-strong);
+  clip-path: var(--clip-chamfer);
+  padding: 1px;
+}
+
+/* The diamond status marker. */
+.marker {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: var(--volt);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.marker--hollow {
+  background-color: transparent;
+  border: 1.5px solid var(--volt);
+}
+
+/* ── Section rhythm ───────────────────────────────────── */
 
 .section {
   position: relative;
-  padding-top: 48px;
-  padding-bottom: 48px;
+  padding-top: 56px;
+  padding-bottom: 56px;
 }
 
 @media (min-width: 768px) {
@@ -129,36 +265,43 @@ html[lang='ja'] .label {
   }
 }
 
-/* ── Case-study prose ─────────────────────────────── */
+/* ── Case-study prose ─────────────────────────────────── */
 
 .prose-quiet p {
-  color: var(--stone);
-  font-weight: 400;
+  color: var(--ash);
   margin-bottom: 1.5em;
 }
 
 .prose-quiet h2,
 .prose-quiet h3 {
-  font-family: 'Zen Old Mincho', serif;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
   font-weight: 500;
-  color: var(--sumi-ink);
+  color: var(--bone);
   margin-top: 2.5em;
   margin-bottom: 0.75em;
-  font-size: 30px;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 html[lang='ja'] .prose-quiet h2,
 html[lang='ja'] .prose-quiet h3 {
-  font-size: 26px;
+  font-size: 20px;
+  text-transform: none;
 }
 
-/* ── Scroll reveal — mono no aware, things arriving softly ── */
+.prose-quiet a {
+  color: var(--signal);
+}
+
+/* ── Scroll reveal ────────────────────────────────────── */
 
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.revealed {
@@ -166,36 +309,17 @@ html[lang='ja'] .prose-quiet h3 {
   transform: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
 ::selection {
-  background: rgba(34, 58, 94, 0.15);
+  background: rgba(232, 220, 85, 0.25);
+  color: var(--bone);
 }
 
-/* ── Keyboard focus ───────────────────────────────── */
+/* ── Keyboard focus ───────────────────────────────────── */
 
-/* Nothing here is visible to a mouse; it appears only once someone is actually
-   navigating by keyboard. Indigo rather than the browser default so it belongs
-   to the palette, with an offset ring so it reads on both washi and sumi. */
 :focus-visible {
-  outline: 2px solid var(--indigo);
+  outline: 2px solid var(--volt);
   outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* On the dark plates indigo disappears — the gold is what stays legible. */
-.site-footer :focus-visible,
-.tech-plate :focus-visible {
-  outline-color: var(--gold);
+  border-radius: 0;
 }
 
 .skip-link {
@@ -204,61 +328,33 @@ html[lang='ja'] .prose-quiet h3 {
   top: 16px;
   z-index: 100;
   padding: 12px 22px;
-  background-color: var(--washi-warm);
-  border: 1px solid var(--indigo);
-  border-radius: 2px;
-  font-size: 14px;
+  background-color: var(--steel-raised);
+  border: 1px solid var(--volt);
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--indigo);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--volt);
   text-decoration: none;
-  /* Held just out of view until focused, rather than display:none, so it stays
-     in the tab order. */
+  /* Held just out of view until focused, rather than display:none, so it
+     stays in the tab order. */
   transform: translateY(-150%);
   transition: transform 200ms ease;
 }
 
-/* :focus, not :focus-visible — the link is unreachable by pointer anyway, and
-   this way it also appears for focus moved programmatically. */
 .skip-link:focus {
   transform: translateY(0);
 }
 
-/* ── Scroll progress: a thread of ink down the left margin ── */
-
-.scroll-thread {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 2px;
-  height: 100vh;
-  z-index: 50;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    var(--indigo),
-    var(--vermilion)
-  );
-  transform-origin: top;
-  transform: scaleY(0);
-  animation: thread linear;
-  animation-timeline: scroll(root block);
-}
-
-/* Safari and Firefox have no scroll-linked animations yet; there the thread is
-   driven from JS, and must not also carry the (never-advancing) animation. */
-.scroll-thread--js {
-  animation: none;
-}
-
-@keyframes thread {
-  to {
-    transform: scaleY(1);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .scroll-thread {
-    display: none;
+  html {
+    scroll-behavior: auto;
   }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
 }

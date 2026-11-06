@@ -25,8 +25,8 @@ const line = [...items, ...items, ...items];
   .marquee {
     position: relative;
     overflow: hidden;
-    border-top: 1px solid var(--paper-edge);
-    border-bottom: 1px solid var(--paper-edge);
+    border-top: 1px solid var(--edge);
+    border-bottom: 1px solid var(--edge);
     padding: 18px 0;
     margin: 24px 0;
     -webkit-mask-image: linear-gradient(
@@ -61,16 +61,16 @@ const line = [...items, ...items, ...items];
     align-items: center;
     gap: 28px;
     padding-right: 28px;
-    font-family: 'Zen Old Mincho', serif;
-    font-size: 14px;
-    letter-spacing: 0.24em;
-    color: var(--stone);
-    opacity: 0.5;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash-faint);
     white-space: nowrap;
   }
 
   .marquee-dot {
-    color: var(--gold);
+    color: var(--volt);
     font-size: 10px;
   }
 

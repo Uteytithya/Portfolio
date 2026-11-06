@@ -1,5 +1,7 @@
 ---
-// Hanko — a vermilion name seal, pressed slightly off-square as a real one would be.
+// Unit stamp. This was a hanko — a vermilion name seal pressed off-square.
+// On an industrial surface the same idea reads as a stencilled unit marking:
+// chamfered, square to the grid, safety yellow instead of seal red.
 const { kanji = '技', size = 72 } = Astro.props;
 ---
 
@@ -9,24 +11,22 @@ const { kanji = '技', size = 72 } = Astro.props;
 
 <style>
   .seal {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: var(--seal-size);
     height: var(--seal-size);
-    border: 2.5px solid var(--vermilion);
-    border-radius: 3px;
-    transform: rotate(-4deg);
-    opacity: 0.88;
-    /* uneven ink, as if pressed by hand */
-    box-shadow: inset 0 0 0 1px rgba(199, 62, 58, 0.25);
+    background-color: var(--steel-raised);
+    clip-path: var(--clip-chamfer-sm);
+    box-shadow: inset 0 0 0 1.5px var(--volt);
   }
 
   .seal-glyph {
-    font-family: 'Zen Old Mincho', serif;
-    font-weight: 600;
-    font-size: calc(var(--seal-size) * 0.5);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 500;
+    font-size: calc(var(--seal-size) * 0.46);
     line-height: 1;
-    color: var(--vermilion);
+    color: var(--volt);
   }
 </style>

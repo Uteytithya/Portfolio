@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
-  <rect width="1200" height="900" fill="#F1ECE1"/>
+  <rect width="1200" height="900" fill="#111419"/>
   <!-- a month, mostly ordinary days -->
-  <g stroke="#6B6560" stroke-width="3" opacity="0.35" fill="none">
+  <g stroke="#a8b0b8" stroke-width="3" opacity="0.35" fill="none">
     <path d="M330 250 h540 M330 360 h540 M330 470 h540 M330 580 h540"/>
     <path d="M330 250 v330 M465 250 v330 M600 250 v330 M735 250 v330 M870 250 v330"/>
   </g>
   <!-- the days that matter -->
-  <rect x="479" y="374" width="107" height="82" fill="#223A5E" opacity="0.65"/>
-  <rect x="749" y="264" width="107" height="82" fill="#7A8B5E" opacity="0.5"/>
-  <rect x="344" y="484" width="107" height="82" fill="none" stroke="#C9A96E" stroke-width="4"/>
-  <text x="960" y="810" font-family="serif" font-size="120" fill="rgba(0,0,0,0.08)">暦</text>
+  <rect x="479" y="374" width="107" height="82" fill="#4dd8e8" opacity="0.65"/>
+  <rect x="749" y="264" width="107" height="82" fill="#6c727a" opacity="0.5"/>
+  <rect x="344" y="484" width="107" height="82" fill="none" stroke="#e8dc55" stroke-width="4"/>
+  <text x="960" y="810" font-family="serif" font-size="120" fill="rgba(230,232,234,0.07)">暦</text>
 </svg>

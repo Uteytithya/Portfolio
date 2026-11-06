@@ -15,15 +15,11 @@ export default defineConfig({
     mdx(),
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', ja: 'ja' } },
-      // `/` is a client-side redirect shim, 404 is not a real page, and
-      // /font-lab is a throwaway type specimen (delete both when the display
-      // face is settled).
+      // `/` is a client-side redirect shim and 404 is not a real page.
       filter: (page) => {
         const path = new URL(page).pathname;
         return (
-          path !== '/' &&
-          !path.startsWith('/404') &&
-          !path.startsWith('/font-lab')
+          path !== '/' && !path.startsWith('/404')
         );
       }
     })
