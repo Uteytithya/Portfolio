@@ -114,14 +114,21 @@ body > * {
 
 /* ── Typography ───────────────────────────────────────── */
 
-/* One family carries the whole site now. The brush serif that used to set
-   the display type has no place on an industrial surface, and dropping it
-   means three Zen Old Mincho weights are never downloaded at all — an
-   unused @font-face is not fetched. */
+/* Display is Oxanium — a squared techno face drawn for game interfaces, and
+   the closest licensable thing to the look this template is after. Body text
+   and everything Japanese stay on Zen Kaku Gothic New.
+   
+   Oxanium covers no kana or ideographs, so the fallback in this stack is
+   load-bearing rather than defensive: in a mixed heading like
+   "InternLink — CVモデル" the Latin resolves to Oxanium and the kana to Zen
+   Kaku, per glyph, which is exactly what should happen.
+   
+   It ships as one variable file carrying the whole 200–800 axis, so asking
+   for a different weight costs no extra request. */
 .font-display {
-  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-family: 'Oxanium', 'Zen Kaku Gothic New', sans-serif;
   font-weight: 500;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.005em;
 }
 
 .text-hero {

@@ -24,6 +24,7 @@ export default {
         // entries pointed at Playfair Display and Noto Serif JP, neither of
         // which was still loaded.
         sans: ['"Zen Kaku Gothic New"', 'sans-serif'],
+        display: ['Oxanium', '"Zen Kaku Gothic New"', 'sans-serif'],
         mono: ['ui-monospace', '"SF Mono"', 'Menlo', 'Consolas', 'monospace']
       },
       maxWidth: {

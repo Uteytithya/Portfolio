@@ -34,6 +34,9 @@ const skip = skipLabel ?? (locale === 'ja' ? '本文へスキップ' : 'Skip to 
 // `crossorigin` is required on font preloads even same-origin, or the browser
 // fetches the file twice.
 const PRELOAD = [
+  // The h1 is the LCP element on most pages and it is set in Oxanium, so the
+  // variable file leads. 12 KB for the whole weight axis.
+  '/fonts/oxanium-var.woff2',
   '/fonts/zen-kaku-gothic-new-400.woff2',
   '/fonts/zen-kaku-gothic-new-500.woff2'
 ];
